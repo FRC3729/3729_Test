@@ -23,10 +23,6 @@ public class Drive {
         
         return INSTANCE;
     }
-    private static class DriveHolder {
-
-        private static final Drive INSTANCE = new Drive();
-    }
     
     public void tank(double left, double right) {
         leftMotor1.set(left);

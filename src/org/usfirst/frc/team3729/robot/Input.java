@@ -36,7 +36,7 @@ public class Input {
         double _y = reduceSpeed(y);
         double y_ = ramp(y, _y, 0.1);
         double y_out = expo(y_, Params.YEXPO);
-        if(Params.testing_input){System.out.println("y: " + y_out);}
+        if(Params.testing_input){System.out.println("y: " + y);}
         return y_out;
     }
     public double getX(){
@@ -44,7 +44,7 @@ public class Input {
         double _x = reduceSpeed(x);
         double x_ = ramp(x, _x, 0.1);
         double x_out = expo(x_, Params.XEXPO);
-        if(Params.testing_input){System.out.println("x: " + x_out);}
+        if(Params.testing_input){System.out.println("x: " + x);}
         return x_out;
     }
     public double getZ(){
@@ -52,7 +52,7 @@ public class Input {
         double _z = reduceSpeed(z);
         double z_ = (ramp(z, _z, 0.1) * -1.0);
         double z_out = expo(z_, Params.ZEXPO);
-        if(Params.testing_input){System.out.println("z: " + z_out);}
+        if(Params.testing_input){System.out.println("z: " + z);}
         return z_out;     
     }
     
@@ -81,7 +81,6 @@ public class Input {
         else if (retVal > 1.0)
             retVal = 1.0;
         return retVal;
-        //return joyVal;
     }
     private double expo(double x, double a) {
         return (a * (x * x * x) + (1 - a) * x);

@@ -72,7 +72,7 @@ public class Robot extends SampleRobot {
             // #### LIVE ROUTINES ####
 
             // Drive
-            _drive.tank(_input.getZ(), _input.getY());
+            _drive.tank(-_input.getY(), -_input.getZ());
         }
     }
     public void test(){
