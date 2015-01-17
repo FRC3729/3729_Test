@@ -7,7 +7,16 @@ public class Params {
     public static final int port_fr = 1;
     public static final int port_bl = 2;
     public static final int port_br = 3;
+    public static final int port_c = 4;
     //!Relays
+    
+    //Adjustments
+    //! Increment at which we ramp output from the x-axis
+    public static final double x_ramp_increment = 0.1;
+    //! Increment at which we ramp output from the y-axis
+    public static final double y_ramp_increment = 0.1;
+    //! Increment at which we ramp output from the z-axis
+    public static final double z_ramp_increment = 0.1;
     
     //Joystick adjustments
     //!Joy centers

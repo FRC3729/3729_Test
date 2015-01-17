@@ -2,6 +2,7 @@
 package org.usfirst.frc.team3729.robot;
 
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -27,6 +28,7 @@ public class Robot extends SampleRobot {
     Input _input;
     Drive _drive;
     Timer auto_timer;
+    CameraServer server;
 
 
     protected void disabled()
@@ -48,6 +50,10 @@ public class Robot extends SampleRobot {
         System.out.println("\t~> 2. A robot must obey the orders given to it by human beings,\n\t      except where such orders would conflict with the First Law.");
         System.out.println("\t~> 3. A robot must protect its own existence as long as\n\t      such protection does not conflict with the First or Second Laws.");
         
+        server = CameraServer.getInstance();
+        server.setQuality(50);
+        //the camera name (ex "cam0") can be found through the roborio web interface
+        server.startAutomaticCapture("cam0");
     }
 
     /**
@@ -72,7 +78,10 @@ public class Robot extends SampleRobot {
             // #### LIVE ROUTINES ####
 
             // Drive
-            _drive.tank(-_input.getY(), -_input.getZ());
+            _drive.Hdrive(_input.getX(), _input.getY(), _input.getZ());
+//            _drive.Quad(_input.getX(), _input.getY(), -_input.getZ());
+//            _drive.tank(_input.getY(), _input.getW());
+//            _drive.arcade(_input.getX(), _input.getY());
         }
     }
     public void test(){

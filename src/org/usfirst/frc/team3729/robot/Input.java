@@ -36,7 +36,7 @@ public class Input {
         double _y = reduceSpeed(y);
         double y_ = ramp(y, _y, 0.1);
         double y_out = expo(y_, Params.YEXPO);
-        if(Params.testing_input){System.out.println("y: " + y);}
+        if(Params.testing_input){System.out.println("y: " + (joy1.getAxis(Joystick.AxisType.kY)));}
         return y_out;
     }
     public double getX(){
@@ -44,19 +44,27 @@ public class Input {
         double _x = reduceSpeed(x);
         double x_ = ramp(x, _x, 0.1);
         double x_out = expo(x_, Params.XEXPO);
-        if(Params.testing_input){System.out.println("x: " + x);}
+        if(Params.testing_input){System.out.println("x: " + (joy1.getAxis(Joystick.AxisType.kX)));}
         return x_out;
     }
     public double getZ(){
-        double z = normalize(joy2.getAxis(Joystick.AxisType.kY) - Params.ZCENTER, Params.ZMIN, Params.ZMAX);
+        double z = normalize(joy2.getAxis(Joystick.AxisType.kX) - Params.ZCENTER, Params.ZMIN, Params.ZMAX);
         double _z = reduceSpeed(z);
         double z_ = (ramp(z, _z, 0.1) * -1.0);
         double z_out = expo(z_, Params.ZEXPO);
-        if(Params.testing_input){System.out.println("z: " + z);}
+        if(Params.testing_input){System.out.println("z: " + (joy2.getAxis(Joystick.AxisType.kX)));}
         return z_out;     
     }
+    public double getW(){
+        double y = normalize(joy2.getAxis(Joystick.AxisType.kY) - Params.YCENTER, Params.YMIN, Params.YMAX);
+        double _y = reduceSpeed(y);
+        double y_ = ramp(y, _y, 0.1);
+        double y_out = expo(y_, Params.YEXPO);
+        if(Params.testing_input){System.out.println("y: " + (joy1.getAxis(Joystick.AxisType.kY)));}
+        return y_out;
+    }
     
-        public static double ramp(double desired_output, double current_output, double increment) {
+    public static double ramp(double desired_output, double current_output, double increment) {
         if (desired_output <= .1 && desired_output >= -.1) {
             increment /= 2;
         }
@@ -84,6 +92,13 @@ public class Input {
     }
     private double expo(double x, double a) {
         return (a * (x * x * x) + (1 - a) * x);
-    
+    }
+    public static double clamp(double value, double min, double max) {
+        if (value < min) {
+            return min;
+        } else if (value > max) {
+            return max;
+        }
+        return value;
     }
 }
