@@ -39,8 +39,6 @@ public class Drive {
     }
     
     public void arcade(double x, double y) {
-//        x = Input.ramp(x, x_prev, Params.x_ramp_increment);
-//        y = Input.ramp(y, y_prev, Params.y_ramp_increment);
         
         if ((y <= 0.1 && y > 0) || (y >= -0.1 && y < 0)) {
             this.tank(-x * 0.75, x * 0.75);
@@ -55,8 +53,6 @@ public class Drive {
             rightMotor2.set(right);
             if (Params.testing_drive){System.out.println("Left: " + left + "Right: " + right + " .");}
         }
-//        x_prev = x;
-//        y_prev = y;
     }
     
     public void Hdrive(double x, double y, double z) {

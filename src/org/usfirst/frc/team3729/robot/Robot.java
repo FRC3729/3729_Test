@@ -27,6 +27,7 @@ public class Robot extends SampleRobot {
 
     Input _input;
     Drive _drive;
+    Mechanisms _mech;
     Timer auto_timer;
     CameraServer server;
 
@@ -41,6 +42,7 @@ public class Robot extends SampleRobot {
         super.robotInit();
         _input = Input.getInstance();
         _drive = Drive.getInstance();
+        _mech = Mechanisms.getInstance();
         auto_timer = new Timer();
         
         // Print banner
@@ -82,6 +84,9 @@ public class Robot extends SampleRobot {
 //            _drive.Quad(_input.getX(), _input.getY(), -_input.getZ());
 //            _drive.tank(_input.getY(), _input.getW());
 //            _drive.arcade(_input.getX(), _input.getY());
+            
+            //Test Mechanisms
+            _mech.test();
         }
     }
     public void test(){

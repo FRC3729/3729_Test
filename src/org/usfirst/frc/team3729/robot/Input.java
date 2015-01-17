@@ -34,7 +34,7 @@ public class Input {
     public double getY(){
         double y = normalize(joy1.getAxis(Joystick.AxisType.kY) - Params.YCENTER, Params.YMIN, Params.YMAX);
         double _y = reduceSpeed(y);
-        double y_ = ramp(y, _y, 0.1);
+        double y_ = ramp(y, _y, Params.y_ramp_increment);
         double y_out = expo(y_, Params.YEXPO);
         if(Params.testing_input){System.out.println("y: " + (joy1.getAxis(Joystick.AxisType.kY)));}
         return y_out;
@@ -42,7 +42,7 @@ public class Input {
     public double getX(){
         double x = normalize(joy1.getAxis(Joystick.AxisType.kX) - Params.XCENTER, Params.XMIN, Params.XMAX);
         double _x = reduceSpeed(x);
-        double x_ = ramp(x, _x, 0.1);
+        double x_ = ramp(x, _x, Params.x_ramp_increment);
         double x_out = expo(x_, Params.XEXPO);
         if(Params.testing_input){System.out.println("x: " + (joy1.getAxis(Joystick.AxisType.kX)));}
         return x_out;
@@ -50,7 +50,7 @@ public class Input {
     public double getZ(){
         double z = normalize(joy2.getAxis(Joystick.AxisType.kX) - Params.ZCENTER, Params.ZMIN, Params.ZMAX);
         double _z = reduceSpeed(z);
-        double z_ = (ramp(z, _z, 0.1) * -1.0);
+        double z_ = ramp(z, _z, Params.x_ramp_increment);
         double z_out = expo(z_, Params.ZEXPO);
         if(Params.testing_input){System.out.println("z: " + (joy2.getAxis(Joystick.AxisType.kX)));}
         return z_out;     
@@ -58,7 +58,7 @@ public class Input {
     public double getW(){
         double y = normalize(joy2.getAxis(Joystick.AxisType.kY) - Params.YCENTER, Params.YMIN, Params.YMAX);
         double _y = reduceSpeed(y);
-        double y_ = ramp(y, _y, 0.1);
+        double y_ = ramp(y, _y, Params.y_ramp_increment);
         double y_out = expo(y_, Params.YEXPO);
         if(Params.testing_input){System.out.println("y: " + (joy1.getAxis(Joystick.AxisType.kY)));}
         return y_out;
