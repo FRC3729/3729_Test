@@ -34,12 +34,11 @@ public class Robot extends SampleRobot {
 
     protected void disabled()
     {
-        super.disabled();
+    	System.out.println("in Disabled");
     }
 
     protected void robotInit()
     {
-        super.robotInit();
         _input = Input.getInstance();
         _drive = Drive.getInstance();
         _mech = Mechanisms.getInstance();
@@ -86,7 +85,13 @@ public class Robot extends SampleRobot {
 //            _drive.arcade(_input.getX(), _input.getY());
             
             //Test Mechanisms
-            _mech.test();
+            if (_input.checkbutton(0, 1)) {
+            	_mech.test();
+            } else if (_input.checkbutton(1, 1)) {
+            	_mech.testalt();
+            }else {
+            	_mech.teststop();
+            }
         }
     }
     public void test(){

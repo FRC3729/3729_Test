@@ -6,20 +6,18 @@ public class Drive {
 	
     private static Drive INSTANCE = null;
     
-	private Talon leftMotor1;
-    private Talon leftMotor2;
+	private Talon leftMotor0;
+    private Talon leftMotor1;
+    private Talon rightMotor0;
     private Talon rightMotor1;
-    private Talon rightMotor2;
-    private Talon centerMotor;
-//    private double x_prev, y_prev, z_prev;
+    private Talon centerMotor0;
     
     private Drive() {
-        leftMotor1 = new Talon(Params.port_fl);
-        leftMotor2 = new Talon(Params.port_bl);
-        rightMotor1 = new Talon(Params.port_fr);
-        rightMotor2 = new Talon(Params.port_br);
-        centerMotor = new Talon(Params.port_c);
-//        x_prev = y_prev = z_prev = 0.0;
+        leftMotor0 = new Talon(Params.port_fl);
+        leftMotor1 = new Talon(Params.port_bl);
+        rightMotor0 = new Talon(Params.port_fr);
+        rightMotor1 = new Talon(Params.port_br);
+        centerMotor0 = new Talon(Params.port_c);
     }
     
     public static Drive getInstance() {
@@ -30,10 +28,10 @@ public class Drive {
     }
     
     public void tank(double left, double right) {
+        leftMotor0.set(left);
         leftMotor1.set(left);
-        leftMotor2.set(left);
+        rightMotor0.set(right);
         rightMotor1.set(right);
-        rightMotor2.set(right);
         if(Params.testing_drive){System.out.println("left: " + left);}
         if(Params.testing_drive){System.out.println("right: " + right);}
     }
@@ -47,31 +45,31 @@ public class Drive {
             double right = y+x;
             left = Input.clamp(left, -1.0, 1.0);
             right = Input.clamp(right, -1.0, 1.0);        
+            leftMotor0.set(-left);
             leftMotor1.set(-left);
-            leftMotor2.set(-left);
+            rightMotor0.set(right);
             rightMotor1.set(right);
-            rightMotor2.set(right);
             if (Params.testing_drive){System.out.println("Left: " + left + "Right: " + right + " .");}
         }
     }
     
     public void Hdrive(double x, double y, double z) {
-        centerMotor.set(-z);
+        centerMotor0.set(-z);
         if (Params.testing_drive){System.out.println("Center: " + z);}
         
     	double left = y-x;
         double right = y+x;
         left = Input.clamp(left, -1.0, 1.0);
         right = Input.clamp(right, -1.0, 1.0);        
+        leftMotor0.set(-left);
         leftMotor1.set(-left);
-        leftMotor2.set(-left);
+        rightMotor0.set(right);
         rightMotor1.set(right);
-        rightMotor2.set(right);
         if (Params.testing_drive){System.out.println("Left: " + left + "Right: " + right + " .");}
     }
     
     public void Quad(double x, double y, double z){
-    	centerMotor.set(x);
+    	centerMotor0.set(x);
     	if (Params.testing_drive){System.out.println("Center: " + x);}
     	
     	if (y <= .1 && y >= -.1) {
@@ -85,11 +83,11 @@ public class Drive {
     }
     
     public void stop() {
+        leftMotor0.set(0.0);
         leftMotor1.set(0.0);
-        leftMotor2.set(0.0);
+        rightMotor0.set(0.0);
         rightMotor1.set(0.0);
-        rightMotor2.set(0.0);
-        centerMotor.set(0.0);
+        centerMotor0.set(0.0);
     }
 
 }

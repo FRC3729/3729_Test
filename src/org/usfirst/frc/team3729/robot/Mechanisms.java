@@ -19,8 +19,14 @@ public class Mechanisms {
         return INSTANCE;
     }
 	
-	public void test() {
+	public void test() {	
 		testspike.set(Relay.Value.kForward);
 	if (Params.testing_mech){System.out.println("Testing forward");}
+	}
+	public void teststop() {
+		testspike.set(Relay.Value.kOff);
+	}
+	public void testalt() {
+		testspike.set(Relay.Value.kReverse);
 	}
 }
