@@ -83,9 +83,12 @@ public class Robot extends SampleRobot {
         		_drive.Hdrive(_input.getX() * Params.creep_speed, _input.getY() * Params.creep_speed, _input.getZ());
         	} else if (_input.getButton(1, 1)) {
         		_drive.Hdrive(_input.getX(), _input.getY(), _input.getZ() * Params.creep_speed);
-        	} else if (_input.getButton(0, 1) && _input.getButton(1, 1)) {
-        		_drive.Hdrive(_input.getX() * Params.creep_speed, _input.getY() * Params.creep_speed, _input.getZ() * Params.creep_speed);
-        	} else {
+        	} else if (_input.getButton(0, 3)) {
+        		_drive.tank(-_input.getW() * .75, _input.getY() * .75);
+        	} else if (_input.getButton(1, 3)) {
+        		//SONAR ALIGN
+        	}
+        	else {
 //        	_drive.tank(_input.getY(), _input.getW());
 //        	_drive.arcade(_input.getX(), _input.getY());
         	_drive.Hdrive(_input.getX(), _input.getY(), _input.getZ());
