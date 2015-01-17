@@ -17,10 +17,6 @@ public class Params {
     //! Increment at which we ramp output from the y-axis
     public static final double y_ramp_increment = 0.2;
     
-    //Defaults
-    //!Drive mode
-    public static final int default_drive = Drive.locked;
-    
     //Joystick adjustments
     //!Joy centers
     public static final double XCENTER = 0.0;

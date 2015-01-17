@@ -13,12 +13,6 @@ public class Drive {
     private Talon rightMotor1;
     private Talon centerMotor0;
     
-    public static final int locked = 0;
-    public static final int tank = 1;
-    public static final int arcade = 2;
-    public static final int Hdrive = 3;
-    public static final int Quad = 4;
-    
     private Drive() {
         leftMotor0 = new Talon(Params.port_fl);
         leftMotor1 = new Talon(Params.port_bl);
