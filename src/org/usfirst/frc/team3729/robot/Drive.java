@@ -3,6 +3,7 @@ package org.usfirst.frc.team3729.robot;
 import edu.wpi.first.wpilibj.Talon;
 
 public class Drive {
+	Input _input;
 	
     private static Drive INSTANCE = null;
     
@@ -12,12 +13,20 @@ public class Drive {
     private Talon rightMotor1;
     private Talon centerMotor0;
     
+    public static final int locked = 0;
+    public static final int tank = 1;
+    public static final int arcade = 2;
+    public static final int Hdrive = 3;
+    public static final int Quad = 4;
+    
     private Drive() {
         leftMotor0 = new Talon(Params.port_fl);
         leftMotor1 = new Talon(Params.port_bl);
         rightMotor0 = new Talon(Params.port_fr);
         rightMotor1 = new Talon(Params.port_br);
         centerMotor0 = new Talon(Params.port_c);
+        
+        _input = new Input();
     }
     
     public static Drive getInstance() {
@@ -54,7 +63,7 @@ public class Drive {
     }
     
     public void Hdrive(double x, double y, double z) {
-        centerMotor0.set(-z);
+        centerMotor0.set(z);
         if (Params.testing_drive){System.out.println("Center: " + z);}
         
     	double left = y-x;

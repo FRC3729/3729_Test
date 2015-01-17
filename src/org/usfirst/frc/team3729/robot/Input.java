@@ -8,7 +8,7 @@ public class Input {
     public final Joystick joy0;
     public final Joystick joy1;
 
-    private Input()
+    public Input()
     {
         this.joy0 = new Joystick(0);
         this.joy1 = new Joystick(1);
@@ -63,14 +63,14 @@ public class Input {
         if(Params.testing_input){System.out.println("y: " + (joy1.getAxis(Joystick.AxisType.kY)));}
         return y_out;
     }
-    public boolean checkbutton(int joy, int buttonid) {
+    public boolean getButton(int joy, int buttonid) {
         switch (joy) {
             case 0:
                 return this.joy0.getRawButton(buttonid);
             case 1:
                 return this.joy1.getRawButton(buttonid);
             default:
-                return checkbutton(0, buttonid);
+                return getButton(0, buttonid);
         }
     }
 

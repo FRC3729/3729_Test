@@ -13,9 +13,13 @@ public class Params {
     
     //Adjustments
     //! Increment at which we ramp output from the x-axis
-    public static final double x_ramp_increment = 0.1;
+    public static final double x_ramp_increment = 0.2;
     //! Increment at which we ramp output from the y-axis
-    public static final double y_ramp_increment = 0.1;
+    public static final double y_ramp_increment = 0.2;
+    
+    //Defaults
+    //!Drive mode
+    public static final int default_drive = Drive.locked;
     
     //Joystick adjustments
     //!Joy centers
@@ -38,6 +42,7 @@ public class Params {
     //!Max/Min robot speeds
     public static final double MAX_SPEED = 0.85;
     public static final double MIN_SPEED = -0.85;
+    public static final double creep_speed = .25;
     
     //!Testing information
     public static final boolean testing_drive = false;

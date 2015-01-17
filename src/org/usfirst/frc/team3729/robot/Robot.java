@@ -79,19 +79,21 @@ public class Robot extends SampleRobot {
             // #### LIVE ROUTINES ####
 
             // Drive
-            _drive.Hdrive(_input.getX(), _input.getY(), _input.getZ());
-//            _drive.Quad(_input.getX(), _input.getY(), -_input.getZ());
-//            _drive.tank(_input.getY(), _input.getW());
-//            _drive.arcade(_input.getX(), _input.getY());
+        	if (_input.getButton(0, 1)) {
+        		_drive.Hdrive(_input.getX() * Params.creep_speed, _input.getY() * Params.creep_speed, _input.getZ());
+        	} else if (_input.getButton(1, 1)) {
+        		_drive.Hdrive(_input.getX(), _input.getY(), _input.getZ() * Params.creep_speed);
+        	} else if (_input.getButton(0, 1) && _input.getButton(1, 1)) {
+        		_drive.Hdrive(_input.getX() * Params.creep_speed, _input.getY() * Params.creep_speed, _input.getZ() * Params.creep_speed);
+        	} else {
+//        	_drive.tank(_input.getY(), _input.getW());
+//        	_drive.arcade(_input.getX(), _input.getY());
+        	_drive.Hdrive(_input.getX(), _input.getY(), _input.getZ());
+//        	_drive.Quad(_input.getX(), _input.getY(), -_input.getZ());
+        	}
             
             //Test Mechanisms
-            if (_input.checkbutton(0, 1)) {
-            	_mech.test();
-            } else if (_input.checkbutton(1, 1)) {
-            	_mech.testalt();
-            }else {
-            	_mech.teststop();
-            }
+//            _mech.test();
         }
     }
     public void test(){
