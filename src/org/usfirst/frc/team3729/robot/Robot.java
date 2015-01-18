@@ -80,24 +80,24 @@ public class Robot extends SampleRobot {
 
             // Drive
         	if (_input.getButton(0, 1)) {
-        		_drive.Hdrive(_input.getX() * Params.creep_speed, _input.getY() * Params.creep_speed, _input.getZ());
+        		_drive.Hdrive(_input.getAxis(0,0) * Params.creep_speed, _input.getAxis(0,1) * Params.creep_speed, _input.getAxis(1,0));
         	} else if (_input.getButton(1, 1)) {
-        		_drive.Hdrive(_input.getX(), _input.getY(), _input.getZ() * Params.creep_speed);
+        		_drive.Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0) * Params.creep_speed);
         	} else if (_input.getButton(0, 3)) {
-        		_drive.tank(-_input.getW() * .75, _input.getY() * .75);
+        		_drive.tank(-_input.getAxis(1,1) * .75, _input.getAxis(0,1) * .75);
         	} else if (_input.getButton(1, 3)) {
         		//SONAR ALIGN
         	}
         	else {
-        	_drive.Hdrive(_input.getX(), _input.getY(), _input.getZ());
-//        	_drive.Quad(_input.getX(), _input.getY(), -_input.getZ());
+        	_drive.Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0));
+//        	_drive.Quad(_input.getAxis(0,0), _input.getAxis(0,1), -_input.getAxis(1,0));
         	}
             
             //Test Mechanisms
             _mech.test();
             
             //Test Xbox
-            System.out.println("DPad values: " + _input.getXboxDP());
+//            System.out.println("Xbox values: " + _input.getAxis(2,0));
         }
     }
     public void test(){

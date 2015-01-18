@@ -12,29 +12,10 @@ public class Params {
     public static final int port_test = 0;
     
     //Adjustments
-    //! Increment at which we ramp output from the x-axis
-    public static final double x_ramp_increment = 0.2;
-    //! Increment at which we ramp output from the y-axis
-    public static final double y_ramp_increment = 0.2;
-    
-    //Joystick adjustments
-    //!Joy centers
-    public static final double XCENTER = 0.0;
-    public static final double YCENTER = 0.0;
-    public static final double ZCENTER = -0.0;
-    //!Joy max/min
-    public static final double XMIN = -0.99;
-    public static final double XMAX = 0.99;
-    public static final double YMIN = -0.99;
-    public static final double YMAX = 0.99;
-    public static final double ZMIN = -0.99;
-    public static final double ZMAX = 0.99;
-    
+    //! Increment at which we ramp output from the axes
+    public static final double ramp_increment = 0.2;   
     //!Exponential values
-    public static final double XEXPO = 0.4;
-    public static final double YEXPO = 0.4;
-    public static final double ZEXPO = 0.4;
-    
+    public static final double expo = 0.4;
     //!Max/Min robot speeds
     public static final double MAX_SPEED = 0.85;
     public static final double MIN_SPEED = -0.85;
@@ -44,5 +25,43 @@ public class Params {
     public static final boolean testing_drive = false;
     public static final boolean testing_input = false;
     public static final boolean testing_mech = false;
+    
+    //Useful Methods
+    
+    //! Limit Robot Speed
+    public static double reduceSpeed(double speed){
+        if (speed < Params.MIN_SPEED)
+            return Params.MIN_SPEED;
+        else if (speed > Params.MAX_SPEED)
+            return Params.MAX_SPEED;
+        else
+            return speed;
+    }
+    //! Prevent Gear Grinding
+    public static double ramp(double desired_output, double current_output, double increment) {
+        if (desired_output <= .1 && desired_output >= -.1) {
+            increment /= 2;
+        }
+        if (desired_output < current_output) {
+            return (current_output - increment) < 0.01 && (current_output - increment) > -0.01 ? 0 : current_output - increment;
+        } else if (desired_output > current_output) {
+            return (current_output + increment) < 0.01 && (current_output + increment) > -0.01 ? 0 : current_output + increment;
+        } else {
+            return current_output < 0.01 && current_output > -0.01 ? 0 : current_output;
+        }
+    }
+    //! Exponential Driving
+    public static double expo(double x, double a) {
+        return (a * (x * x * x) + (1 - a) * x);
+    }
+    //! Clamp values
+    public static double clamp(double value, double min, double max) {
+        if (value < min) {
+            return min;
+        } else if (value > max) {
+            return max;
+        }
+        return value;
+    }
     
 }

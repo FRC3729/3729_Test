@@ -32,55 +32,8 @@ public class Input {
         else
             return speed;
     }
-    public double getX(){
-        double x = normalize(joy0.getAxis(Joystick.AxisType.kX) - Params.XCENTER, Params.XMIN, Params.XMAX);
-        double _x = reduceSpeed(x);
-        double x_ = ramp(x, _x, Params.x_ramp_increment);
-        double x_out = expo(x_, Params.XEXPO);
-        if(Params.testing_input){System.out.println("x: " + (joy0.getAxis(Joystick.AxisType.kX)));}
-        return x_out;
-    }
-    public double getY(){
-        double y = normalize(joy0.getAxis(Joystick.AxisType.kY) - Params.YCENTER, Params.YMIN, Params.YMAX);
-        double _y = reduceSpeed(y);
-        double y_ = ramp(y, _y, Params.y_ramp_increment);
-        double y_out = expo(y_, Params.YEXPO);
-        if(Params.testing_input){System.out.println("y: " + (joy0.getAxis(Joystick.AxisType.kY)));}
-        return y_out;
-    }
-    public double getZ(){
-        double z = normalize(joy1.getAxis(Joystick.AxisType.kX) - Params.ZCENTER, Params.ZMIN, Params.ZMAX);
-        double _z = reduceSpeed(z);
-        double z_ = ramp(z, _z, Params.x_ramp_increment);
-        double z_out = expo(z_, Params.ZEXPO);
-        if(Params.testing_input){System.out.println("z: " + (joy1.getAxis(Joystick.AxisType.kX)));}
-        return z_out;     
-    }
-    public double getW(){
-        double y = normalize(joy1.getAxis(Joystick.AxisType.kY) - Params.YCENTER, Params.YMIN, Params.YMAX);
-        double _y = reduceSpeed(y);
-        double y_ = ramp(y, _y, Params.y_ramp_increment);
-        double y_out = expo(y_, Params.YEXPO);
-        if(Params.testing_input){System.out.println("y: " + (joy1.getAxis(Joystick.AxisType.kY)));}
-        return y_out;
-    }
-    
-    public double getXboxLX(){
-    	return xbox.getRawAxis(1);
-    }
-    public double getXboxLY(){
-    	return xbox.getRawAxis(2);
-    }
-    public double getXboxRX(){
-    	return xbox.getRawAxis(4);
-    }
-    public double getXboxRY(){
-    	return xbox.getRawAxis(5);
-    }
-    public double getXboxDP(){
-    	return xbox.getRawAxis(6);
-    }
-    
+        
+    //!Button control
     public boolean getButton(int joy, int buttonid) {
         switch (joy) {
             case 0:
@@ -89,47 +42,29 @@ public class Input {
                 return this.joy1.getRawButton(buttonid);
             case 2:
             	return this.xbox.getRawButton(buttonid);
+            	//A:1,B:2,X:3,Y:4,LB:5,RB:6,Back:7,Start:8,LS:9,RS:10
             default:
                 return getButton(0, buttonid);
         }
     }
-
-    
-    public static double ramp(double desired_output, double current_output, double increment) {
-        if (desired_output <= .1 && desired_output >= -.1) {
-            increment /= 2;
-        }
-        if (desired_output < current_output) {
-            return (current_output - increment) < 0.01 && (current_output - increment) > -0.01 ? 0 : current_output - increment;
-        } else if (desired_output > current_output) {
-            return (current_output + increment) < 0.01 && (current_output + increment) > -0.01 ? 0 : current_output + increment;
-        } else {
-            return current_output < 0.01 && current_output > -0.01 ? 0 : current_output;
-        }
-    }
-
-    // Normalize input values to -1.0 to 1.0
-    private double normalize(double joyVal, double min, double max){
-        double retVal = 0.0;
-        if (joyVal < 0.0)
-            retVal = Math.abs(joyVal) / min;
-        else if (joyVal > 0.0)
-            retVal = Math.abs(joyVal) / max;
-        if (retVal < -1.0)
-            retVal = -1.0;
-        else if (retVal > 1.0)
-            retVal = 1.0;
-        return retVal;
-    }
-    private double expo(double x, double a) {
-        return (a * (x * x * x) + (1 - a) * x);
-    }
-    public static double clamp(double value, double min, double max) {
-        if (value < min) {
-            return min;
-        } else if (value > max) {
-            return max;
-        }
-        return value;
+    //!Axis control
+    public double getAxis(int joy, int axis) {
+    	switch(joy) {
+    		case 0: //X:0,Y:1,Z/Twist:2
+    			double _axis0 = this.joy0.getRawAxis(axis);
+    			double _axis0_ = Params.reduceSpeed(_axis0);
+    			double axis0_ = Params.ramp(_axis0, _axis0_, Params.ramp_increment);
+    			return Params.expo(axis0_, Params.expo);
+    		case 1://X:0,Y:1,Z/Twist:2
+    			double _axis1 = this.joy1.getRawAxis(axis);
+    			double _axis1_ = Params.reduceSpeed(_axis1);
+    			double axis1_ = Params.ramp(_axis1, _axis1_, Params.ramp_increment);
+    			return Params.expo(axis1_, Params.expo);
+    		case 2://LX:0,LY:1,LTrigger:2,RTrigger:3,RX:4,RY:5
+    			return this.xbox.getRawAxis(axis);
+    			//Triggers have value b/w 0 & 1
+    		default:
+    			return getAxis(0, axis);
+    	}
     }
 }
