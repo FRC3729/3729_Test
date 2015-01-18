@@ -89,14 +89,15 @@ public class Robot extends SampleRobot {
         		//SONAR ALIGN
         	}
         	else {
-//        	_drive.tank(_input.getY(), _input.getW());
-//        	_drive.arcade(_input.getX(), _input.getY());
         	_drive.Hdrive(_input.getX(), _input.getY(), _input.getZ());
 //        	_drive.Quad(_input.getX(), _input.getY(), -_input.getZ());
         	}
             
             //Test Mechanisms
-//            _mech.test();
+            _mech.test();
+            
+            //Test Xbox
+            System.out.println("DPad values: " + _input.getXboxDP());
         }
     }
     public void test(){

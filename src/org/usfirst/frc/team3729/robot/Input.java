@@ -7,11 +7,13 @@ public class Input {
     
     public final Joystick joy0;
     public final Joystick joy1;
+    public final Joystick xbox;
 
     public Input()
     {
         this.joy0 = new Joystick(0);
         this.joy1 = new Joystick(1);
+        this.xbox = new Joystick(2);
     }
     
     public static Input getInstance()
@@ -30,15 +32,6 @@ public class Input {
         else
             return speed;
     }
-
-    public double getY(){
-        double y = normalize(joy0.getAxis(Joystick.AxisType.kY) - Params.YCENTER, Params.YMIN, Params.YMAX);
-        double _y = reduceSpeed(y);
-        double y_ = ramp(y, _y, Params.y_ramp_increment);
-        double y_out = expo(y_, Params.YEXPO);
-        if(Params.testing_input){System.out.println("y: " + (joy0.getAxis(Joystick.AxisType.kY)));}
-        return y_out;
-    }
     public double getX(){
         double x = normalize(joy0.getAxis(Joystick.AxisType.kX) - Params.XCENTER, Params.XMIN, Params.XMAX);
         double _x = reduceSpeed(x);
@@ -46,6 +39,14 @@ public class Input {
         double x_out = expo(x_, Params.XEXPO);
         if(Params.testing_input){System.out.println("x: " + (joy0.getAxis(Joystick.AxisType.kX)));}
         return x_out;
+    }
+    public double getY(){
+        double y = normalize(joy0.getAxis(Joystick.AxisType.kY) - Params.YCENTER, Params.YMIN, Params.YMAX);
+        double _y = reduceSpeed(y);
+        double y_ = ramp(y, _y, Params.y_ramp_increment);
+        double y_out = expo(y_, Params.YEXPO);
+        if(Params.testing_input){System.out.println("y: " + (joy0.getAxis(Joystick.AxisType.kY)));}
+        return y_out;
     }
     public double getZ(){
         double z = normalize(joy1.getAxis(Joystick.AxisType.kX) - Params.ZCENTER, Params.ZMIN, Params.ZMAX);
@@ -63,12 +64,31 @@ public class Input {
         if(Params.testing_input){System.out.println("y: " + (joy1.getAxis(Joystick.AxisType.kY)));}
         return y_out;
     }
+    
+    public double getXboxLX(){
+    	return xbox.getRawAxis(1);
+    }
+    public double getXboxLY(){
+    	return xbox.getRawAxis(2);
+    }
+    public double getXboxRX(){
+    	return xbox.getRawAxis(4);
+    }
+    public double getXboxRY(){
+    	return xbox.getRawAxis(5);
+    }
+    public double getXboxDP(){
+    	return xbox.getRawAxis(6);
+    }
+    
     public boolean getButton(int joy, int buttonid) {
         switch (joy) {
             case 0:
                 return this.joy0.getRawButton(buttonid);
             case 1:
                 return this.joy1.getRawButton(buttonid);
+            case 2:
+            	return this.xbox.getRawButton(buttonid);
             default:
                 return getButton(0, buttonid);
         }
