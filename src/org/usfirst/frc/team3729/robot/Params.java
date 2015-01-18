@@ -8,8 +8,15 @@ public class Params {
     public static final int port_bl = 2;
     public static final int port_br = 3;
     public static final int port_c = 4;
+    public static final int port_c1 = 5;
+    public static final int port_elev0 = 6;
+    public static final int port_elev1 = 7;
+    public static final int port_eject = 8;
     //!Relays
-    public static final int port_test = 0;
+    public static final int port_arm0 = 0;
+    public static final int port_arm1 = 1;
+    public static final int port_intake = 2;
+    public static final int port_heightadj = 3;
     
     //Adjustments
     //! Increment at which we ramp output from the axes
