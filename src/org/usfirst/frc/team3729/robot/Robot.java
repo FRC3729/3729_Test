@@ -97,7 +97,7 @@ public class Robot extends SampleRobot {
             _mech.test();
             
             //Test Xbox
-//            System.out.println("Xbox values: " + _input.getAxis(2,0));
+            System.out.println("Xbox values: " + _input.test());
         }
     }
     public void test(){
