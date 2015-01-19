@@ -20,6 +20,11 @@ public class Mechanisms {
 	private Talon ejector;
 	
 	private DigitalInput limit_armsout;
+	private DigitalInput limit_armsout_safety;
+	private DigitalInput limit_slide_forward;
+	private DigitalInput limit_slide_reverse;
+	private DigitalInput limit_heightadj_up;
+	private DigitalInput limit_heightadj_down;
 	
 	private Mechanisms() {
 		arm0 = new Relay(Params.port_arm0);
@@ -32,6 +37,11 @@ public class Mechanisms {
 		ejector = new Talon(Params.port_eject);
 		
 		limit_armsout = new DigitalInput(Params.port_armslimit);
+		limit_armsout_safety = new DigitalInput(Params.port_armslimit_safety);
+		limit_slide_forward = new DigitalInput(Params.port_limit_slide_forward);
+		limit_slide_reverse = new DigitalInput(Params.port_limit_slide_reverse);
+		limit_heightadj_up = new DigitalInput(Params.port_limit_heightadj_up);
+		limit_heightadj_down = new DigitalInput(Params.port_limit_heightadj_down);
 		
 		_input = new Input();
 	}
@@ -59,11 +69,11 @@ public class Mechanisms {
 		}
 	}
 	public void arms() {
-		if (_input.getAxis(2, 2) >= .75 && !limit_armsout.get()) {
+		if (_input.getAxis(2, 2) >= .75 && !limit_armsout.get() && !limit_armsout_safety.get()) {
 			arm0.set(Relay.Value.kForward);
 			arm1.set(Relay.Value.kReverse);
 			if (Params.testing_mech){ System.out.println("arms out, limit: " + limit_armsout.get());}
-		} else if (_input.getAxis(2, 2) >= .75 && limit_armsout.get()) {
+		} else if (_input.getAxis(2, 2) >= .75 && (limit_armsout.get() || limit_armsout_safety.get())) {
 			arm0.set(Relay.Value.kOff);
 			arm1.set(Relay.Value.kOff);
 			if (Params.testing_mech){ System.out.println("arms out, limit: " + limit_armsout.get());}
@@ -89,10 +99,18 @@ public class Mechanisms {
 		}
 	}
 	public void ejector() {
-		
+		//HOW IN THE HELL AM I GOING TO DO THIS NONSENSE???
 	}
 	public void height() {
-		
+		if (_input.getAxis(2, 1) <= -.75 && !limit_heightadj_down.get()) {
+			heightadj.set(Relay.Value.kReverse);
+		} else if (_input.getAxis(2, 1) >= .75 && !limit_heightadj_up.get()) {
+			heightadj.set(Relay.Value.kForward);
+		} else if (!limit_heightadj_up.get() && limit_slide_reverse.get()) {
+			heightadj.set(Relay.Value.kForward);
+		} else {
+			heightadj.set(Relay.Value.kOff);
+		}
 	}
 	public void stop() {
 		arm0.set(Relay.Value.kOff);

@@ -19,6 +19,11 @@ public class Params {
     public static final int port_heightadj = 3;
     //!Limit Switches
     public static final int port_armslimit = 0;
+    public static final int port_armslimit_safety = 1;
+    public static final int port_limit_slide_forward = 2;
+	public static final int port_limit_slide_reverse = 3;
+	public static final int port_limit_heightadj_up = 4;
+	public static final int port_limit_heightadj_down = 5;
     
     //Adjustments
     //! Increment at which we ramp output from the axes
