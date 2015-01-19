@@ -7,7 +7,7 @@ public class Params {
     public static final int port_fr = 1;
     public static final int port_bl = 2;
     public static final int port_br = 3;
-    public static final int port_c = 4;
+    public static final int port_c0 = 4;
     public static final int port_c1 = 5;
     public static final int port_elev0 = 6;
     public static final int port_elev1 = 7;
