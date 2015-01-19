@@ -2,6 +2,7 @@ package org.usfirst.frc.team3729.robot;
 
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Mechanisms {
 	
@@ -18,6 +19,13 @@ public class Mechanisms {
 	private Talon elevator1;
 	private Talon ejector;
 	
+	private DigitalInput limit_armsout;
+	private DigitalInput limit_armsout_safety;
+	private DigitalInput limit_slide_forward;
+	private DigitalInput limit_slide_reverse;
+	private DigitalInput limit_heightadj_up;
+	private DigitalInput limit_heightadj_down;
+	
 	private Mechanisms() {
 		arm0 = new Relay(Params.port_arm0);
 		arm1 = new Relay(Params.port_arm1);
@@ -27,6 +35,13 @@ public class Mechanisms {
 		elevator0 = new Talon(Params.port_elev0);
 		elevator1 = new Talon(Params.port_elev1);
 		ejector = new Talon(Params.port_eject);
+
+		limit_armsout = new DigitalInput(Params.port_armslimit);
+		limit_armsout_safety = new DigitalInput(Params.port_armslimit_safety);
+		limit_slide_forward = new DigitalInput(Params.port_limit_slide_forward);
+		limit_slide_reverse = new DigitalInput(Params.port_limit_slide_reverse);
+		limit_heightadj_up = new DigitalInput(Params.port_limit_heightadj_up);
+		limit_heightadj_down = new DigitalInput(Params.port_limit_heightadj_down);
 		
 		_input = new Input();
 	}
@@ -45,23 +60,57 @@ public class Mechanisms {
 	public void intake() {
 		if (_input.getButton(2, 6)) {
 			intake.set(Relay.Value.kReverse);
+			if (Params.testing_mech){ System.out.println("Intake going in");}
 		} else if (_input.getButton(2, 5)) {
 			intake.set(Relay.Value.kForward);
+			if (Params.testing_mech){ System.out.println("Intake going out");}
 		} else {
 			intake.set(Relay.Value.kOff);
 		}
 	}
 	public void arms() {
-		
+		if (_input.getAxis(2, 2) >= .75 && !limit_armsout.get() && !limit_armsout_safety.get()) {
+			arm0.set(Relay.Value.kForward);
+			arm1.set(Relay.Value.kReverse);
+			if (Params.testing_mech){ System.out.println("arms out, limit: " + limit_armsout.get());}
+		} else if (_input.getAxis(2, 2) >= .75 && (limit_armsout.get() || limit_armsout_safety.get())) {
+			arm0.set(Relay.Value.kOff);
+			arm1.set(Relay.Value.kOff);
+			if (Params.testing_mech){ System.out.println("arms out, limit: " + limit_armsout.get());}
+		} else if (_input.getAxis(2, 3) >= .75) {
+			arm0.set(Relay.Value.kReverse);
+			arm1.set(Relay.Value.kForward);
+			if (Params.testing_mech){ System.out.println("arms in");}
+		} else {
+			arm0.set(Relay.Value.kOff);
+			arm1.set(Relay.Value.kOff);
+		}
 	}
 	public void elevator() {
-		
+		//basic elevator code
+		if (_input.getButton(2, 4)) {
+			elevator0.set(Params.elevator_speed);
+			elevator1.set(Params.elevator_speed);
+			if (Params.testing_mech){ System.out.println("elevator up");}
+		} else if (_input.getButton(2, 4)) {
+			elevator0.set(-Params.elevator_speed);
+			elevator1.set(-Params.elevator_speed);
+			if (Params.testing_mech){ System.out.println("elevator down");}
+		}
 	}
 	public void ejector() {
-		
+		//HOW IN THE HELL AM I GOING TO DO THIS NONSENSE???
 	}
 	public void height() {
-		
+		if (_input.getAxis(2, 1) <= -.75 && !limit_heightadj_down.get()) {
+			heightadj.set(Relay.Value.kReverse);
+		} else if (_input.getAxis(2, 1) >= .75 && !limit_heightadj_up.get()) {
+			heightadj.set(Relay.Value.kForward);
+		} else if (!limit_heightadj_up.get() && limit_slide_reverse.get()) {
+			heightadj.set(Relay.Value.kForward);
+		} else {
+			heightadj.set(Relay.Value.kOff);
+		}
 	}
 	public void stop() {
 		arm0.set(Relay.Value.kOff);

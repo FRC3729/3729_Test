@@ -23,16 +23,9 @@ public class Input {
         
         return INSTANCE;
     }
-    
-    public double reduceSpeed(double speed){
-        if (speed < Params.MIN_SPEED)
-            return Params.MIN_SPEED;
-        else if (speed > Params.MAX_SPEED)
-            return Params.MAX_SPEED;
-        else
-            return speed;
+    public double test() {
+    	return xbox.getPOV(0);
     }
-        
     //!Button control
     public boolean getButton(int joy, int buttonid) {
         switch (joy) {
