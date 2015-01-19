@@ -17,6 +17,8 @@ public class Params {
     public static final int port_arm1 = 1;
     public static final int port_intake = 2;
     public static final int port_heightadj = 3;
+    //!Limit Switches
+    public static final int port_armslimit = 0;
     
     //Adjustments
     //! Increment at which we ramp output from the axes
@@ -27,6 +29,7 @@ public class Params {
     public static final double MAX_SPEED = 0.85;
     public static final double MIN_SPEED = -0.85;
     public static final double creep_speed = .25;
+    public static final double elevator_speed = .55;
     
     //!Testing information
     public static final boolean testing_drive = false;
@@ -34,7 +37,6 @@ public class Params {
     public static final boolean testing_mech = false;
     
     //Useful Methods
-    
     //! Limit Robot Speed
     public static double reduceSpeed(double speed){
         if (speed < Params.MIN_SPEED)

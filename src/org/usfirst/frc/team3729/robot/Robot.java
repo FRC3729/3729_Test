@@ -35,6 +35,8 @@ public class Robot extends SampleRobot {
     protected void disabled()
     {
     	System.out.println("in Disabled");
+    	_drive.stop();
+    	_mech.stop();
     }
 
     protected void robotInit()
@@ -93,8 +95,10 @@ public class Robot extends SampleRobot {
 //        	_drive.Quad(_input.getAxis(0,0), _input.getAxis(0,1), -_input.getAxis(1,0));
         	}
             
-            //Test Mechanisms
+            //Mechanisms
             _mech.test();
+            _mech.intake();
+            _mech.arms();
             
             //Test Xbox
             System.out.println("Xbox values: " + _input.test());
