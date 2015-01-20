@@ -40,7 +40,7 @@ public class Params {
     //!Testing information
     public static final boolean testing_drive = false;
     public static final boolean testing_input = false;
-    public static final boolean testing_mech = false;
+    public static final boolean testing_mech = true;
     
     //Useful Methods
     //! Limit Robot Speed
