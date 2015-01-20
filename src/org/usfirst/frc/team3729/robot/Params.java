@@ -35,6 +35,7 @@ public class Params {
     public static final double MIN_SPEED = -0.85;
     public static final double creep_speed = .25;
     public static final double elevator_speed = .55;
+    public static final double elevator_speed_low = .25;
     
     //!Testing information
     public static final boolean testing_drive = false;
