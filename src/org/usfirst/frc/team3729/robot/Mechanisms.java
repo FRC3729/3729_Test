@@ -88,6 +88,19 @@ public class Mechanisms {
 	}
 	public void elevator() {
 		//basic elevator code
+		/*
+		 *	if (elevator0.encoder.get() > elevator1.encoder.get()) {
+		 * 		elevator0.set(Params.elevator_speed_low);
+		 * 		elevator1.set(Params.elevator_speed);
+		 * 	} else if (elevator0.encoder.get() < elevator0.encoder.get()) {
+		 * 		elevator0.set(Params.elevator_speed);
+		 * 		elevator1.set(Params.elevator_speed_low);
+		 * 	} else {
+		 * 		elevator0.set(Params.elevator_speed);
+		 * 		elevator1.set(Params.elevator_speed);
+		 * 	}
+		 * 
+		 */
 		if (_input.getButton(2, 4)) {
 			elevator0.set(Params.elevator_speed);
 			elevator1.set(Params.elevator_speed);
@@ -99,7 +112,15 @@ public class Mechanisms {
 		}
 	}
 	public void ejector() {
-		//HOW IN THE HELL AM I GOING TO DO THIS NONSENSE???
+		//HOW IN THE HELL AM I GOING TO DO THIS ACCELERATION NONSENSE???
+		//non accelerated version
+		if (_input.getAxis(2, 5) >= .75 && !limit_slide_forward.get()) {
+			ejector.set(.5);
+		} else if (_input.getAxis(2, 5) <= -.75 && !limit_slide_reverse.get()) {
+			ejector.set(-.5);
+		} else {
+			ejector.set(0.0);
+		}
 	}
 	public void height() {
 		if (_input.getAxis(2, 1) <= -.75 && !limit_heightadj_down.get()) {
