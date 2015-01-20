@@ -26,6 +26,8 @@ public class Mechanisms {
 	private DigitalInput limit_heightadj_up;
 	private DigitalInput limit_heightadj_down;
 	
+	private int state_ejector;
+	
 	private Mechanisms() {
 		arm0 = new Relay(Params.port_arm0);
 		arm1 = new Relay(Params.port_arm1);
@@ -43,6 +45,8 @@ public class Mechanisms {
 		limit_heightadj_up = new DigitalInput(Params.port_limit_heightadj_up);
 		limit_heightadj_down = new DigitalInput(Params.port_limit_heightadj_down);
 		
+		state_ejector = 0;
+		
 		_input = new Input();
 	}
 	
@@ -53,6 +57,11 @@ public class Mechanisms {
         return INSTANCE;
     }
 	
+	public void getejectorstate() {
+		if (_input.getButton(2, 9)) {
+			state_ejector = 1;
+		}
+	}
 	public void test() {
 //		System.out.println("Limit: " + limit_armsout.get());
 //		System.out.println("Limit safety: " + limit_armsout_safety.get());
@@ -71,10 +80,10 @@ public class Mechanisms {
 		}
 	}
 	public void arms() {
-		if (_input.getAxis(2, 2) >= .75 && limit_armsout.get() && limit_armsout_safety.get()) {
+		if (_input.getAxis(2, 2) >= .75 && !limit_armsout.get() && !limit_armsout_safety.get()) {
 			arm0.set(Relay.Value.kForward);
 			arm1.set(Relay.Value.kReverse);
-			if (Params.testing_mech){ System.out.println("arms out, limit: " + !limit_armsout.get());}
+			if (Params.testing_mech){ System.out.println("arms out, limit: " + limit_armsout.get());}
 		} else if (_input.getAxis(2, 3) >= .75) {
 			arm0.set(Relay.Value.kReverse);
 			arm1.set(Relay.Value.kForward);
@@ -111,25 +120,47 @@ public class Mechanisms {
 	}
 	public void ejector() {
 		//HOW IN THE HELL AM I GOING TO DO THIS ACCELERATION NONSENSE???
+		
 		//non accelerated version
-		if (_input.getAxis(2, 5) <= -.75 && limit_slide_forward.get()) {
+		//!sequential states from button press then immediate release
+		getejectorstate();
+		if (state_ejector == 0) {
+			ejector.set(0.0);
+		} else if (state_ejector == 1) {
+			if (!limit_slide_forward.get()) {
+				ejector.set(.5);
+			} else {
+				state_ejector = 2;
+			}
+		} else if (state_ejector == 2) {
+			if (!limit_slide_reverse.get()) {
+				ejector.set(-.5);
+			} else {
+				state_ejector = 0;
+			}
+		} else {
+			ejector.set(0.0);
+		}
+		//!Manual move slide
+		if (_input.getAxis(2, 5) <= -.75 && !limit_slide_forward.get()) {
 			ejector.set(.5);
 			if (Params.testing_mech){ System.out.println("Ejector pushing");}
-		} else if (_input.getAxis(2, 5) >= .75 && limit_slide_reverse.get()) {
+		} else if (_input.getAxis(2, 5) >= .75 && !limit_slide_reverse.get()) {
 			ejector.set(-.5);
 			if (Params.testing_mech){ System.out.println("Ejector resetting");}
 		} else {
 			ejector.set(0.0);
 		}
+		
 	}
 	public void height() {
-		if (_input.getAxis(2, 1) >= .75 && limit_heightadj_down.get()) {
+		if (_input.getAxis(2, 1) >= .75 && !limit_heightadj_down.get()) {
 			heightadj.set(Relay.Value.kReverse);
 			if (Params.testing_mech){ System.out.println("height going down");}
-		} else if (_input.getAxis(2, 1) <= -.75 && limit_heightadj_up.get()) {
+		} else if (_input.getAxis(2, 1) <= -.75 && !limit_heightadj_up.get()) {
 			heightadj.set(Relay.Value.kForward);
 			if (Params.testing_mech){ System.out.println("height going up");}
-		} else if (!limit_heightadj_up.get() && !limit_slide_reverse.get()) {
+		} else if (!limit_heightadj_up.get() && limit_slide_reverse.get()) {
 			heightadj.set(Relay.Value.kForward);
 			if (Params.testing_mech){ System.out.println("height going up");}
 		} else {
