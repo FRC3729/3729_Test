@@ -24,8 +24,9 @@ public class Input {
         return INSTANCE;
     }
     public double test() {
-    	return xbox.getPOV(0);
+    	return xbox.getPOV();
     }
+    
     //!Button control
     public boolean getButton(int joy, int buttonid) {
         switch (joy) {

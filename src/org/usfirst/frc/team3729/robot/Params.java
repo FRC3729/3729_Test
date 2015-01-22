@@ -16,14 +16,10 @@ public class Params {
     public static final int port_arm0 = 0;
     public static final int port_arm1 = 1;
     public static final int port_intake = 2;
-    public static final int port_heightadj = 3;
+    public static final int port_arm_slide = 3;
     //!Limit Switches
     public static final int port_armslimit = 0;
     public static final int port_armslimit_safety = 1;
-    public static final int port_limit_slide_forward = 2;
-	public static final int port_limit_slide_reverse = 3;
-	public static final int port_limit_heightadj_up = 4;
-	public static final int port_limit_heightadj_down = 5;
     
     //Adjustments
     //! Increment at which we ramp output from the axes
@@ -43,7 +39,7 @@ public class Params {
     public static final boolean testing_mech = true;
     
     //Useful Methods
-    //! Limit Robot Speed
+    //!Limit Robot Speeds
     public static double reduceSpeed(double speed){
         if (speed < Params.MIN_SPEED)
             return Params.MIN_SPEED;
@@ -52,7 +48,7 @@ public class Params {
         else
             return speed;
     }
-    //! Prevent Gear Grinding
+    //!Slow the change of a value
     public static double ramp(double desired_output, double current_output, double increment) {
         if (desired_output <= .1 && desired_output >= -.1) {
             increment /= 2;
@@ -65,11 +61,11 @@ public class Params {
             return current_output < 0.01 && current_output > -0.01 ? 0 : current_output;
         }
     }
-    //! Exponential Driving
+    //!Exponential Driving
     public static double expo(double x, double a) {
         return (a * (x * x * x) + (1 - a) * x);
     }
-    //! Clamp values
+    //!Clamp values
     public static double clamp(double value, double min, double max) {
         if (value < min) {
             return min;
