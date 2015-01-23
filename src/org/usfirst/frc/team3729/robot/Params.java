@@ -11,19 +11,20 @@ public class Params {
     public static final int port_c1 = 5;
     public static final int port_elev0 = 6;
     public static final int port_elev1 = 7;
-    public static final int port_eject = 8;
     //!Relays
     public static final int port_arm0 = 0;
     public static final int port_arm1 = 1;
     public static final int port_intake = 2;
-    public static final int port_arm_slide = 3;
     //!Limit Switches
     public static final int port_armslimit = 0;
     public static final int port_armslimit_safety = 1;
+    //!Encoders
+    public static final int port_encoder_elevator_aChannel = 0;
+    public static final int port_encoder_elevator_bChannel = 1;
     
     //Adjustments
     //! Increment at which we ramp output from the axes
-    public static final double ramp_increment = 0.2;   
+    public static final double ramp_increment = 0.05;   
     //!Exponential values
     public static final double expo = 0.4;
     //!Max/Min robot speeds

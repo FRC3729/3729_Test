@@ -56,7 +56,7 @@ public class Input {
     			return Params.expo(axis1_, Params.expo);
     		case 2://LX:0,LY:1,LTrigger:2,RTrigger:3,RX:4,RY:5
     			return this.xbox.getRawAxis(axis);
-    			//Triggers have value b/w 0 & 1
+    			//Triggers have values b/w 0 & 1
     		default:
     			return getAxis(0, axis);
     	}

@@ -48,8 +48,8 @@ public class Drive {
 //        } else {
             double left = y-x;
             double right = y+x;
-            left = Params.clamp(left, -1.0, 1.0);
-            right = Params.clamp(right, -1.0, 1.0);        
+            left = Params.clamp(left, Params.MIN_SPEED, Params.MAX_SPEED);
+            right = Params.clamp(right, Params.MIN_SPEED, Params.MAX_SPEED);        
             leftMotor0.set(-left);
             leftMotor1.set(-left);
             rightMotor0.set(right);
@@ -65,8 +65,8 @@ public class Drive {
         
     	double left = y-x;
         double right = y+x;
-        left = Params.clamp(left, -1.0, 1.0);
-        right = Params.clamp(right, -1.0, 1.0);        
+        left = Params.clamp(left, Params.MIN_SPEED, Params.MAX_SPEED);
+        right = Params.clamp(right, Params.MIN_SPEED, Params.MAX_SPEED);        
         leftMotor0.set(-left);
         leftMotor1.set(-left);
         rightMotor0.set(right);
