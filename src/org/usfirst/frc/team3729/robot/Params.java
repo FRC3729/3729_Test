@@ -19,25 +19,32 @@ public class Params {
     public static final int port_armslimit = 0;
     public static final int port_armslimit_safety = 1;
     //!Encoders
-    public static final int port_encoder_elevator_aChannel = 0;
-    public static final int port_encoder_elevator_bChannel = 1;
+    public static final int port_encoder_elevator_aChannel = 2;
+    public static final int port_encoder_elevator_bChannel = 3;
     
     //Adjustments
     //! Increment at which we ramp output from the axes
     public static final double ramp_increment = 0.05;   
     //!Exponential values
-    public static final double expo = 0.4;
+    public static final double expo = 0.3;
     //!Max/Min robot speeds
     public static final double MAX_SPEED = 0.85;
     public static final double MIN_SPEED = -0.85;
     public static final double creep_speed = .25;
     public static final double elevator_speed = .55;
     public static final double elevator_speed_low = .25;
+    //!Elevator levels
+    public static final int level_0 = 0;
+    public static final int level_1 = 210;
+    public static final int level_2 = 450;
+    public static final int level_3 = 850;
+    public static final int level_4 = 1100;
+    public static final int level_top = 1200;
     
     //!Testing information
     public static final boolean testing_drive = false;
     public static final boolean testing_input = false;
-    public static final boolean testing_mech = true;
+    public static final boolean testing_mech = false;
     
     //Useful Methods
     //!Limit Robot Speeds
