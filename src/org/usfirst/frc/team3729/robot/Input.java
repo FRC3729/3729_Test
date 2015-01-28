@@ -47,12 +47,12 @@ public class Input {
     		case 0: //X:0,Y:1,Z/Twist:2
     			double _axis0 = this.joy0.getRawAxis(axis);
     			double _axis0_ = Params.reduceSpeed(_axis0);
-    			double axis0_ = Params.ramp(_axis0, _axis0_, Params.ramp_increment);
+    			double axis0_ = Params.ramp2_0(_axis0, _axis0_, Params.ramp_increment);
     			return Params.expo(axis0_, Params.expo);
     		case 1://X:0,Y:1,Z/Twist:2
     			double _axis1 = this.joy1.getRawAxis(axis);
     			double _axis1_ = Params.reduceSpeed(_axis1);
-    			double axis1_ = Params.ramp(_axis1, _axis1_, Params.ramp_increment);
+    			double axis1_ = Params.ramp2_0(_axis1, _axis1_, Params.ramp_increment);
     			return Params.expo(axis1_, Params.expo);
     		case 2://LX:0,LY:1,LTrigger:2,RTrigger:3,RX:4,RY:5
     			return this.xbox.getRawAxis(axis);

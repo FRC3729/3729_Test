@@ -97,7 +97,7 @@ public class Robot extends SampleRobot {
         	}
             
             //Mechanisms
-            _mech.test();
+//            _mech.test();
             _mech.intake();
             _mech.arms();
             _mech.elevator();

@@ -34,7 +34,7 @@ public class Params {
     public static final double elevator_speed = .55;
     public static final double elevator_speed_low = .25;
     //!Elevator levels
-    public static final int level_0 = 0;
+    public static final int level_0 = -10;
     public static final int level_1 = 210;
     public static final int level_2 = 450;
     public static final int level_3 = 850;
@@ -68,6 +68,10 @@ public class Params {
         } else {
             return current_output < 0.01 && current_output > -0.01 ? 0 : current_output;
         }
+    }
+    public static double ramp2_0(double desired, double current, double increment) {
+    	double output = current + (desired * increment);
+    	return output;
     }
     //!Exponential Driving
     public static double expo(double x, double a) {
