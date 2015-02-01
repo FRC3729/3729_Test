@@ -2,7 +2,7 @@ package org.usfirst.frc.team3729.robot;
 
 public class Params {
 	//Port allocations
-    //!Talons
+    //!Talons -PWM-
     public static final int port_l0 = 0;
     public static final int port_r0 = 1;
     public static final int port_l1 = 2;
@@ -11,21 +11,19 @@ public class Params {
     public static final int port_c1 = 5;
     public static final int port_elev0 = 6;
     public static final int port_elev1 = 7;
-    //!Relays
+    //!Relays -Relay-
     public static final int port_arm0 = 0;
     public static final int port_arm1 = 1;
     public static final int port_intake = 2;
-    //!Limit Switches
+    //!Limit Switches -Digital I/O-
     public static final int port_armslimit = 0;
     public static final int port_armslimit_safety = 1;
-    //!Encoders
+    //!Encoders -Digital I/O-
     public static final int port_encoder_elevator_aChannel = 2;
     public static final int port_encoder_elevator_bChannel = 3;
-    //!Sonar
-    public static final int port_sonar0_out = 4;
-    public static final int port_sonar0_in = 5;
-    public static final int port_sonar1_out = 6;
-    public static final int port_sonar1_in = 7;
+    //!Sonar -Analog In-
+    public static final int port_sonar0 = 0;
+    public static final int port_sonar1 = 1;
     
     //Adjustments
     //! Increment at which we ramp output from the axes

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3729.robot;
 
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 public class Drive {
 	Input _input;
@@ -15,8 +15,8 @@ public class Drive {
     private Talon centerMotor0;
     private Talon centerMotor1;
     
-    private Ultrasonic sonar0;
-    private Ultrasonic sonar1;
+    private AnalogInput sonar0;
+    private AnalogInput sonar1;
     
     private Drive() {
         leftMotor0 = new Talon(Params.port_l0);
@@ -26,9 +26,8 @@ public class Drive {
         centerMotor0 = new Talon(Params.port_c0);
         centerMotor1 = new Talon(Params.port_c1);
         
-        sonar0 = new Ultrasonic(Params.port_sonar0_out, Params.port_sonar0_in, Ultrasonic.Unit.kInches);
-        sonar1 = new Ultrasonic(Params.port_sonar1_out, Params.port_sonar1_in);
-        sonar0.setEnabled(true);
+        sonar0 = new AnalogInput(Params.port_sonar0);
+        sonar1 = new AnalogInput(Params.port_sonar1);
         
         _input = new Input();
     }
@@ -40,33 +39,35 @@ public class Drive {
         return INSTANCE;
     }
     
+    //!Sonar Auto-Align
     public void align() {
-    	System.out.println("Sonar0: " + sonar0.isRangeValid());
-//    	if (sonar0.getRangeInches() > sonar1.getRangeInches()) {
-//    		this.tank(Params.creep_speed, 0.0);
-//    	} else if (sonar0.getRangeInches() < sonar1.getRangeInches()) {
-//    		this.tank(0.0, Params.creep_speed);
-//    	} else {
-//    		this.stop();
-//    	}
+    	if (sonar0.getValue() > sonar1.getValue()) {
+    		this.tank(Params.creep_speed, 0.0);
+    	} else if (sonar0.getValue() < sonar1.getValue()) {
+    		this.tank(0.0, Params.creep_speed);
+    	} else {
+    		this.stop();
+    	}
     }
     
     //Drive values for testing
     public void test() {
-    	System.out.println("Sonar0: " + sonar0.getRangeInches());
-    	System.out.println("Sonar1: " + sonar1.getRangeInches());
+    	System.out.println("Sonar0: " + sonar0.getValue());
+    	System.out.println("Sonar1: " + sonar1.getValue());
     	System.out.println("left : " + leftMotor0.get() + ", " + leftMotor1.get());
     	System.out.println("Right : " + rightMotor0.get() + ", " + rightMotor1.get());
     	System.out.println("Center : " + centerMotor0.get() + ", " + centerMotor1.get());
     }
     
     //Drive Modes
+    //!Tank Drive
     public void tank(double left, double right) {
         leftMotor0.set(left);
         leftMotor1.set(left);
         rightMotor0.set(right);
         rightMotor1.set(right);
     }    
+    //!Arcade Drive
     public void arcade(double x, double y) {
         double left = y-x;
         double right = y+x;
@@ -77,6 +78,7 @@ public class Drive {
         rightMotor0.set(right);
         rightMotor1.set(right);
     }
+    //!H Drive
     public void Hdrive(double x, double y, double z) {
         centerMotor0.set(z);
         centerMotor1.set(z);
@@ -90,6 +92,7 @@ public class Drive {
         rightMotor0.set(right);
         rightMotor1.set(right);
     }
+    //!Quad Drive
     public void Quad(double x, double y, double z){
     	centerMotor0.set(x);
     	centerMotor1.set(x);
@@ -103,6 +106,7 @@ public class Drive {
     		System.out.println("!!This code is completly untested!!");
     	}
     }
+    //!Stopped
     public void stop() {
         leftMotor0.set(0.0);
         leftMotor1.set(0.0);
