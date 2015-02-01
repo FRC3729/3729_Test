@@ -3,10 +3,10 @@ package org.usfirst.frc.team3729.robot;
 public class Params {
 	//Port allocations
     //!Talons
-    public static final int port_fl = 0;
-    public static final int port_fr = 1;
-    public static final int port_bl = 2;
-    public static final int port_br = 3;
+    public static final int port_l0 = 0;
+    public static final int port_r0 = 1;
+    public static final int port_l1 = 2;
+    public static final int port_r1 = 3;
     public static final int port_c0 = 4;
     public static final int port_c1 = 5;
     public static final int port_elev0 = 6;
@@ -37,7 +37,6 @@ public class Params {
     public static final double MIN_SPEED = -0.85;
     public static final double creep_speed = .25;
     public static final double elevator_speed = .55;
-    public static final double elevator_speed_low = .25;
     //!Elevator levels
     public static final int level_0 = -10;
     public static final int level_1 = 210;
@@ -62,18 +61,6 @@ public class Params {
             return speed;
     }
     //!Slow the change of a value
-    public static double ramp(double desired_output, double current_output, double increment) {
-        if (desired_output <= .1 && desired_output >= -.1) {
-            increment /= 2;
-        }
-        if (desired_output < current_output) {
-            return (current_output - increment) < 0.01 && (current_output - increment) > -0.01 ? 0 : current_output - increment;
-        } else if (desired_output > current_output) {
-            return (current_output + increment) < 0.01 && (current_output + increment) > -0.01 ? 0 : current_output + increment;
-        } else {
-            return current_output < 0.01 && current_output > -0.01 ? 0 : current_output;
-        }
-    }
     public static double ramp2_0(double desired, double current, double increment) {
     	double output = current + (desired * increment);
     	return output;

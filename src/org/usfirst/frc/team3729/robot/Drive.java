@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3729.robot;
 
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
 public class Drive {
@@ -20,10 +19,10 @@ public class Drive {
     private Ultrasonic sonar1;
     
     private Drive() {
-        leftMotor0 = new Talon(Params.port_fl);
-        leftMotor1 = new Talon(Params.port_bl);
-        rightMotor0 = new Talon(Params.port_fr);
-        rightMotor1 = new Talon(Params.port_br);
+        leftMotor0 = new Talon(Params.port_l0);
+        leftMotor1 = new Talon(Params.port_l1);
+        rightMotor0 = new Talon(Params.port_r0);
+        rightMotor1 = new Talon(Params.port_r1);
         centerMotor0 = new Talon(Params.port_c0);
         centerMotor1 = new Talon(Params.port_c1);
         
@@ -42,9 +41,6 @@ public class Drive {
     }
     
     public void align() {
-    	Timer.delay(.2);
-//    	sonar0.setAutomaticMode(true);
-//    	sonar0.ping();
     	System.out.println("Sonar0: " + sonar0.isRangeValid());
 //    	if (sonar0.getRangeInches() > sonar1.getRangeInches()) {
 //    		this.tank(Params.creep_speed, 0.0);
@@ -55,45 +51,35 @@ public class Drive {
 //    	}
     }
     
+    //Drive values for testing
     public void test() {
     	System.out.println("Sonar0: " + sonar0.getRangeInches());
     	System.out.println("Sonar1: " + sonar1.getRangeInches());
-    	System.out.println("left0 : " + leftMotor0.get());
-    	System.out.println("left1 : " + leftMotor1.get());
-    	System.out.println("right0 : " + rightMotor0.get());
-    	System.out.println("right1 : " + rightMotor1.get());
-    	System.out.println("center0 : " + centerMotor0.get());
-    	System.out.println("center1 : " + centerMotor1.get());
+    	System.out.println("left : " + leftMotor0.get() + ", " + leftMotor1.get());
+    	System.out.println("Right : " + rightMotor0.get() + ", " + rightMotor1.get());
+    	System.out.println("Center : " + centerMotor0.get() + ", " + centerMotor1.get());
     }
     
+    //Drive Modes
     public void tank(double left, double right) {
         leftMotor0.set(left);
         leftMotor1.set(left);
         rightMotor0.set(right);
         rightMotor1.set(right);
-//        if(Params.testing_drive){System.out.println("left: " + left);}
-//        if(Params.testing_drive){System.out.println("right: " + right);}
     }    
     public void arcade(double x, double y) {
-        
-//        if ((y <= 0.1 && y > 0) || (y >= -0.1 && y < 0)) {
-//            this.tank(-x * 0.75, x * 0.75);
-//        } else {
-            double left = y-x;
-            double right = y+x;
-            left = Params.clamp(left, Params.MIN_SPEED, Params.MAX_SPEED);
-            right = Params.clamp(right, Params.MIN_SPEED, Params.MAX_SPEED);        
-            leftMotor0.set(-left);
-            leftMotor1.set(-left);
-            rightMotor0.set(right);
-            rightMotor1.set(right);
-//            if (Params.testing_drive){System.out.println("Left: " + left + "Right: " + right + " .");}
-//        }
+        double left = y-x;
+        double right = y+x;
+        left = Params.clamp(left, Params.MIN_SPEED, Params.MAX_SPEED);
+        right = Params.clamp(right, Params.MIN_SPEED, Params.MAX_SPEED);        
+        leftMotor0.set(-left);
+        leftMotor1.set(-left);
+        rightMotor0.set(right);
+        rightMotor1.set(right);
     }
     public void Hdrive(double x, double y, double z) {
         centerMotor0.set(z);
         centerMotor1.set(z);
-        if (Params.testing_drive){System.out.println("Center: " + z);}
         
     	double left = y-x;
         double right = y+x;
@@ -103,12 +89,10 @@ public class Drive {
         leftMotor1.set(-left);
         rightMotor0.set(right);
         rightMotor1.set(right);
-//        if (Params.testing_drive){System.out.println("Left: " + left + "Right: " + right + " .");}
     }
     public void Quad(double x, double y, double z){
     	centerMotor0.set(x);
     	centerMotor1.set(x);
-//    	if (Params.testing_drive){System.out.println("Center: " + x);}
     	
     	if (y <= .1 && y >= -.1) {
     		this.tank(z * .75, z * .75);
@@ -119,7 +103,6 @@ public class Drive {
     		System.out.println("!!This code is completly untested!!");
     	}
     }
-    
     public void stop() {
         leftMotor0.set(0.0);
         leftMotor1.set(0.0);

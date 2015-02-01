@@ -111,6 +111,9 @@ public class Robot extends SampleRobot {
     public void test(){
     	while (isTest() && isEnabled()) {
     		LiveWindow.run();
+    		if (Params.testing_mech) {_mech.test();}
+            if (Params.testing_input) {_input.test();}
+            if (Params.testing_drive) {_drive.test();}
     		Timer.delay(0.1);
     	}
     }
