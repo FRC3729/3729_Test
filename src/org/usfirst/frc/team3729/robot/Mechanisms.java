@@ -53,9 +53,8 @@ public class Mechanisms {
     }
 	
 	public void test() {
-//		System.out.println("Limit: " + limit_armsout.get());
-//		System.out.println("Limit safety: " + limit_armsout_safety.get());
-//		System.out.println("Xbox D-Pad: " + _input.xbox.getPOV());
+		System.out.println("Limit: " + limit_armsout.get());
+		System.out.println("Limit safety: " + limit_armsout_safety.get());
 		System.out.println("Encoder: " + encoder_elevator.get());
 	}
 	

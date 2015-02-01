@@ -88,8 +88,9 @@ public class Robot extends SampleRobot {
         		_drive.Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0) * Params.creep_speed);
         	} else if (_input.getButton(0, 3)) {
         		_drive.tank(-_input.getAxis(1,1) * .75, _input.getAxis(0,1) * .75);
-        	} else if (_input.getButton(1, 3)) {
+        	} else if (_input.getButton(1, 2)) {
         		//SONAR ALIGN
+        		_drive.align();
         	}
         	else {
         	_drive.Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0));
@@ -97,13 +98,14 @@ public class Robot extends SampleRobot {
         	}
             
             //Mechanisms
-//            _mech.test();
             _mech.intake();
             _mech.arms();
             _mech.elevator();
             
-            //Test Xbox
-//            System.out.println("Xbox values: " + _input.test());
+            //Testing values
+            if (Params.testing_mech) {_mech.test();}
+            if (Params.testing_input) {_input.test();}
+            if (Params.testing_drive) {_drive.test();}
         }
     }
     public void test(){

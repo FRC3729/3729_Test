@@ -23,8 +23,11 @@ public class Input {
         
         return INSTANCE;
     }
-    public double test() {
-    	return xbox.getPOV();
+    public void test() {
+    	System.out.println("Joy0 X axis: " + this.getAxis(0, 0));
+    	System.out.println("Joy0 Y axis: " + this.getAxis(0, 1));
+    	System.out.println("Joy1 X axis: " + this.getAxis(1, 0));
+    	System.out.println("Joy1 Y axis: " + this.getAxis(1, 1));
     }
     
     //!Button control
