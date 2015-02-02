@@ -24,6 +24,7 @@ public class Mechanisms {
 	private Encoder encoder_elevator;
 	
 	private boolean elevator;
+	private boolean lvl_change;
 	private int lvl;
 	
 	private Mechanisms() {
@@ -42,6 +43,7 @@ public class Mechanisms {
 		_input = new Input();
 		
 		elevator = false;
+		lvl_change = true;
 		
 	}
 	
@@ -59,10 +61,12 @@ public class Mechanisms {
 	}
 	
 	public void setlvl(int level) {
-		lvl = level;
+		if (lvl_change) {
+			lvl = level;
+		} else { }
 	}
 	public int getlvl() {
-//		System.out.println("lvl: " + lvl);
+		System.out.println("lvl: " + lvl);
 		return lvl;
 	}
 	
@@ -112,16 +116,16 @@ public class Mechanisms {
 		}		
 		
 		//Elevator Level control
-		if (_input.xbox.getPOV() == 0) {
+		if (_input.getButton(0,11)) {
 			//Move up a level
-			getlvl();
-			setlvl(lvl + 1);
+			setlvl(getlvl() + 1);
 			elevator = true;
+			lvl_change = false;
 		} else if (_input.xbox.getPOV() == 180) {
 			//Move down a level
-			getlvl();
-			setlvl(lvl - 1);
+			setlvl(getlvl() - 1);
 			elevator = true;
+			lvl_change = false;
 		}
 		setelevator();
 	}
@@ -133,8 +137,78 @@ public class Mechanisms {
 					elevator0.set(0.0);
 					elevator1.set(0.0);
 					elevator = false;
+					lvl_change = true;
 				case 0: 
-					
+					if (encoder_elevator.get() < Params.level_0) {
+						elevator0.set(Params.elevator_speed);
+						elevator1.set(Params.elevator_speed);
+					} else if (encoder_elevator.get() > Params.level_0) {
+						elevator0.set(-Params.elevator_speed);
+						elevator1.set(-Params.elevator_speed);
+					} else {
+						elevator = false;
+						lvl_change = true;
+					}
+				case 1: 
+					if (encoder_elevator.get() < Params.level_1) {
+						elevator0.set(Params.elevator_speed);
+						elevator1.set(Params.elevator_speed);
+					} else if (encoder_elevator.get() > Params.level_1) {
+						elevator0.set(-Params.elevator_speed);
+						elevator1.set(-Params.elevator_speed);
+					} else {
+						elevator = false;
+						lvl_change = true;
+					}
+				case 2: 
+					if (encoder_elevator.get() < Params.level_2) {
+						elevator0.set(Params.elevator_speed);
+						elevator1.set(Params.elevator_speed);
+					} else if (encoder_elevator.get() > Params.level_2) {
+						elevator0.set(-Params.elevator_speed);
+						elevator1.set(-Params.elevator_speed);
+					} else {
+						elevator = false;
+						lvl_change = true;
+					}
+				case 3: 
+					if (encoder_elevator.get() < Params.level_3) {
+						elevator0.set(Params.elevator_speed);
+						elevator1.set(Params.elevator_speed);
+					} else if (encoder_elevator.get() > Params.level_3) {
+						elevator0.set(-Params.elevator_speed);
+						elevator1.set(-Params.elevator_speed);
+					} else {
+						elevator = false;
+						lvl_change = true;
+					}
+				case 4: 
+					if (encoder_elevator.get() < Params.level_4) {
+						elevator0.set(Params.elevator_speed);
+						elevator1.set(Params.elevator_speed);
+					} else if (encoder_elevator.get() > Params.level_4) {
+						elevator0.set(-Params.elevator_speed);
+						elevator1.set(-Params.elevator_speed);
+					} else {
+						elevator = false;
+						lvl_change = true;
+					}
+				case 5: 
+					if (encoder_elevator.get() < Params.level_top) {
+						elevator0.set(Params.elevator_speed);
+						elevator1.set(Params.elevator_speed);
+					} else if (encoder_elevator.get() > Params.level_top) {
+						elevator0.set(-Params.elevator_speed);
+						elevator1.set(-Params.elevator_speed);
+					} else {
+						elevator = false;
+						lvl_change = true;
+					}
+				case 6:
+					elevator0.set(0.0);
+					elevator1.set(0.0);
+					elevator = false;
+					lvl_change = true;
 			}
 		} else {
 			elevator0.set(0.0);
