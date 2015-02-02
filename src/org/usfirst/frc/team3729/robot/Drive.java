@@ -39,6 +39,15 @@ public class Drive {
         return INSTANCE;
     }
     
+    //Drive values for testing
+    public void test() {
+    	System.out.println("Sonar0: " + sonar0.getValue());
+    	System.out.println("Sonar1: " + sonar1.getValue());
+    	System.out.println("left : " + leftMotor0.get() + ", " + leftMotor1.get());
+    	System.out.println("Right : " + rightMotor0.get() + ", " + rightMotor1.get());
+    	System.out.println("Center : " + centerMotor0.get() + ", " + centerMotor1.get());
+    }
+    
     //!Sonar Auto-Align
     public void align() {
     	if (sonar0.getValue() > sonar1.getValue()) {
@@ -50,15 +59,6 @@ public class Drive {
     	}
     }
     
-    //Drive values for testing
-    public void test() {
-    	System.out.println("Sonar0: " + sonar0.getValue());
-    	System.out.println("Sonar1: " + sonar1.getValue());
-    	System.out.println("left : " + leftMotor0.get() + ", " + leftMotor1.get());
-    	System.out.println("Right : " + rightMotor0.get() + ", " + rightMotor1.get());
-    	System.out.println("Center : " + centerMotor0.get() + ", " + centerMotor1.get());
-    }
-    
     //Drive Modes
     //!Tank Drive
     public void tank(double left, double right) {
@@ -67,17 +67,6 @@ public class Drive {
         rightMotor0.set(right);
         rightMotor1.set(right);
     }    
-    //!Arcade Drive
-    public void arcade(double x, double y) {
-        double left = y-x;
-        double right = y+x;
-        left = Params.clamp(left, Params.MIN_SPEED, Params.MAX_SPEED);
-        right = Params.clamp(right, Params.MIN_SPEED, Params.MAX_SPEED);        
-        leftMotor0.set(-left);
-        leftMotor1.set(-left);
-        rightMotor0.set(right);
-        rightMotor1.set(right);
-    }
     //!H Drive
     public void Hdrive(double x, double y, double z) {
         centerMotor0.set(z);
@@ -94,17 +83,7 @@ public class Drive {
     }
     //!Quad Drive
     public void Quad(double x, double y, double z){
-    	centerMotor0.set(x);
-    	centerMotor1.set(x);
-    	
-    	if (y <= .1 && y >= -.1) {
-    		this.tank(z * .75, z * .75);
-    	} else if (z <= .1 && z >= -.1) {
-    		this.tank(-y, y);
-    	} else { 
-    		this.arcade(z, y);
-    		System.out.println("!!This code is completly untested!!");
-    	}
+    	this.Hdrive(z, y, x);
     }
     //!Stopped
     public void stop() {

@@ -18,9 +18,10 @@ public class Params {
     //!Limit Switches -Digital I/O-
     public static final int port_armslimit = 0;
     public static final int port_armslimit_safety = 1;
+    public static final int port_encoder_reset = 2;
     //!Encoders -Digital I/O-
-    public static final int port_encoder_elevator_aChannel = 2;
-    public static final int port_encoder_elevator_bChannel = 3;
+    public static final int port_encoder_elevator_aChannel = 3;
+    public static final int port_encoder_elevator_bChannel = 4;
     //!Sonar -Analog In-
     public static final int port_sonar0 = 0;
     public static final int port_sonar1 = 1;
@@ -36,12 +37,7 @@ public class Params {
     public static final double creep_speed = .25;
     public static final double elevator_speed = .55;
     //!Elevator levels
-    public static final int level_0 = -10;
-    public static final int level_1 = 210;
-    public static final int level_2 = 450;
-    public static final int level_3 = 850;
-    public static final int level_4 = 1100;
-    public static final int level_top = 1200;
+    public static final int[] level = {0,210,450,850,1100,1200};
     
     //!Testing information
     public static final boolean testing_drive = false;
@@ -49,15 +45,6 @@ public class Params {
     public static final boolean testing_mech = false;
     
     //Useful Methods
-    //!Limit Robot Speeds
-    public static double reduceSpeed(double speed){
-        if (speed < Params.MIN_SPEED)
-            return Params.MIN_SPEED;
-        else if (speed > Params.MAX_SPEED)
-            return Params.MAX_SPEED;
-        else
-            return speed;
-    }
     //!Slow the change of a value
     public static double ramp2_0(double desired, double current, double increment) {
     	double output = current + (desired * increment);

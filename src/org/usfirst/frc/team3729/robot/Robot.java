@@ -1,28 +1,11 @@
 
 package org.usfirst.frc.team3729.robot;
 
-
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
-/**
- * This is a demo program showing the use of the RobotDrive class.
- * The SampleRobot class is the base of a robot application that will automatically call your
- * Autonomous and OperatorControl methods at the right time as controlled by the switches on
- * the driver station or the field controls.
- *
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the SampleRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- *
- * WARNING: While it may look like a good choice to use for your code if you're inexperienced,
- * don't. Unless you know what you are doing, complex code will be much more difficult under
- * this system. Use IterativeRobot or Command-Based instead if you're new.
- */
 public class Robot extends SampleRobot {
 
     Input _input;
@@ -30,7 +13,6 @@ public class Robot extends SampleRobot {
     Mechanisms _mech;
     Timer auto_timer;
     CameraServer server;
-
 
     protected void disabled()
     {
@@ -46,7 +28,7 @@ public class Robot extends SampleRobot {
         _mech = Mechanisms.getInstance();
         auto_timer = new Timer();
         
-        // Print banner
+        //Print banner
         System.out.println(" ______ ______ ______ ______\n|__    |      |__    |  __  |\n|__    |_     |    __|__    |\n|______| |____|______|______|\n");
         System.out.println("This robot complies with Asimov's Laws of Robotics:");
         System.out.println("\t~> 1. A robot may not injure a human being or,\n\t      through inaction, allow a human being to come to harm.");
@@ -81,7 +63,7 @@ public class Robot extends SampleRobot {
         {
             // #### LIVE ROUTINES ####
 
-            // Drive
+            //!Drive
         	if (_input.getButton(0, 1)) {
         		_drive.Hdrive(_input.getAxis(0,0) * Params.creep_speed, _input.getAxis(0,1) * Params.creep_speed, _input.getAxis(1,0));
         	} else if (_input.getButton(1, 1)) {
@@ -97,12 +79,12 @@ public class Robot extends SampleRobot {
 //        	_drive.Quad(_input.getAxis(0,0), _input.getAxis(0,1), -_input.getAxis(1,0));
         	}
             
-            //Mechanisms
+            //!Mechanisms
             _mech.intake();
             _mech.arms();
             _mech.elevator();
             
-            //Testing values
+            //!Testing values
             if (Params.testing_mech) {_mech.test();}
             if (Params.testing_input) {_input.test();}
             if (Params.testing_drive) {_drive.test();}
