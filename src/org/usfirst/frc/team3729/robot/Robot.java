@@ -44,6 +44,7 @@ public class Robot extends SampleRobot {
         _input = Input.getInstance();
         _drive = Drive.getInstance();
         _mech = Mechanisms.getInstance();
+        
         auto_timer = new Timer();
         
         // Print banner
