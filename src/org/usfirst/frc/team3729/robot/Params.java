@@ -22,9 +22,11 @@ public class Params {
     //!Encoders -Digital I/O-
     public static final int port_encoder_elevator_aChannel = 3;
     public static final int port_encoder_elevator_bChannel = 4;
-    //!Sonar -Analog In-
-    public static final int port_sonar0 = 0;
-    public static final int port_sonar1 = 1;
+    //!Sonar -Digital I/O-
+    public static final int port_sonar0_in = 5;
+    public static final int port_sonar1_in = 6;
+    public static final int port_sonar0_out = 7;
+    public static final int port_sonar1_out = 8;
     
     //Adjustments
     //! Increment at which we ramp output from the axes

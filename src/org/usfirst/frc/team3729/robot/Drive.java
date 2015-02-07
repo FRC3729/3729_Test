@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3729.robot;
 
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Ultrasonic;
 
 public class Drive {
 	Input _input;
@@ -15,8 +15,8 @@ public class Drive {
     private Talon centerMotor0;
     private Talon centerMotor1;
     
-    private AnalogInput sonar0;
-    private AnalogInput sonar1;
+    private Ultrasonic sonar0;
+    private Ultrasonic sonar1;
     
     private Drive() {
         leftMotor0 = new Talon(Params.port_l0);
@@ -26,8 +26,11 @@ public class Drive {
         centerMotor0 = new Talon(Params.port_c0);
         centerMotor1 = new Talon(Params.port_c1);
         
-        sonar0 = new AnalogInput(Params.port_sonar0);
-        sonar1 = new AnalogInput(Params.port_sonar1);
+        sonar0 = new Ultrasonic(Params.port_sonar0_in,Params.port_sonar0_out);
+        sonar0.setEnabled(true);
+        sonar1 = new Ultrasonic(Params.port_sonar1_in,Params.port_sonar1_out);
+        sonar1.setEnabled(true);
+        sonar1.setAutomaticMode(true);
         
         _input = new Input();
     }
@@ -41,8 +44,8 @@ public class Drive {
     
     //Drive values for testing
     public void test() {
-    	System.out.println("Sonar0: " + sonar0.getValue());
-    	System.out.println("Sonar1: " + sonar1.getValue());
+    	System.out.println("Sonar0: " + sonar0.getRangeInches());
+    	System.out.println("Sonar1: " + sonar1.getRangeInches());
     	System.out.println("left : " + leftMotor0.get() + ", " + leftMotor1.get());
     	System.out.println("Right : " + rightMotor0.get() + ", " + rightMotor1.get());
     	System.out.println("Center : " + centerMotor0.get() + ", " + centerMotor1.get());
@@ -50,9 +53,9 @@ public class Drive {
     
     //!Sonar Auto-Align
     public void align() {
-    	if (sonar0.getValue() > sonar1.getValue()) {
+    	if (sonar0.getRangeInches() > sonar1.getRangeInches()) {
     		this.tank(Params.creep_speed, 0.0);
-    	} else if (sonar0.getValue() < sonar1.getValue()) {
+    	} else if (sonar0.getRangeInches() < sonar1.getRangeInches()) {
     		this.tank(0.0, Params.creep_speed);
     	} else {
     		this.stop();

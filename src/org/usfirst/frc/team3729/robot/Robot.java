@@ -37,7 +37,7 @@ public class Robot extends SampleRobot {
         
         //Setup Camera 
         server = CameraServer.getInstance();
-        server.setQuality(50);
+        server.setQuality(51);
         //the camera name (ex "cam0") can be found through the roborio web interface
         server.startAutomaticCapture("cam0");
     }
@@ -85,9 +85,9 @@ public class Robot extends SampleRobot {
             _mech.elevator();
             
             //!Testing values
-            if (Params.testing_mech) {_mech.test();}
-            if (Params.testing_input) {_input.test();}
-            if (Params.testing_drive) {_drive.test();}
+            if (Params.testing_mech) {_mech.test(); Timer.delay(0.1);}
+            if (Params.testing_input) {_input.test(); Timer.delay(0.1);}
+            if (Params.testing_drive) {_drive.test(); Timer.delay(0.1);}
         }
     }
     public void test(){
@@ -96,7 +96,7 @@ public class Robot extends SampleRobot {
     		if (Params.testing_mech) {_mech.test();}
             if (Params.testing_input) {_input.test();}
             if (Params.testing_drive) {_drive.test();}
-    		Timer.delay(0.1);
+    		Timer.delay(0.3);
     	}
     }
 }

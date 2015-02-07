@@ -60,6 +60,7 @@ public class Mechanisms {
 		System.out.println("Limit: " + limit_armsout.get());
 		System.out.println("Limit safety: " + limit_armsout_safety.get());
 		System.out.println("Encoder: " + encoder_elevator.get());
+		System.out.println("Elevator level: " + lvl);
 	}
 	
 	public void setlvl(int level) {
@@ -70,7 +71,6 @@ public class Mechanisms {
 		} else {}
 	}
 	public int getlvl() {
-		System.out.println("lvl: " + lvl);
 		return lvl;
 	}
 	
