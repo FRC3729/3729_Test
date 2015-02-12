@@ -57,10 +57,10 @@ public class Mechanisms extends Thread {
 	public void run() {
 		intake();
 		arms();
-		getelevator();
+		setelevator(getelevator());
 		//Dashboard Displays
 		SmartDashboard.putBoolean("DB/LED 0", !elevator); //Display whether the Elevator is in position
-		SmartDashboard.putNumber("DB/Slider 0", getlvl()); //Display the Elevator's current level
+		SmartDashboard.putNumber("DB/Slider 0", lvl); //Display the Elevator's current level
 	}
 	
 	//Give out testing values
@@ -122,23 +122,29 @@ public class Mechanisms extends Thread {
 			} else {}
 		} else {}
 	}
-	public int getlvl() {
-		return lvl;
-	}
-	public void getelevator() { 		
+
+	public int getelevator() { 		
 		//!Reset encoder to keep values accurate
 		if (limit_encoder_reset.get()) {
 			encoder_elevator.reset();
 		}
 		//!Elevator Level control
 		if (_input.xbox.getPOV() == 0) { //Move up a level
-			setlvl(getlvl() + 1);
+			if (!elevator) {
+				if (lvl > 0 && lvl < 5) {
+					lvl++;
+				}
+			}
 			elevator = true;
 		} else if (_input.xbox.getPOV() == 180) { //Move down a level
-			setlvl(getlvl() - 1);
+			if (!elevator) {
+				if (lvl > 0 && lvl < 5) {
+					lvl--;
+				}
+			}
 			elevator = true;
 		}
-		setelevator(getlvl());
+		return lvl;
 	}
 	//Move the Elevator
 	private void setelevator(int level) {
