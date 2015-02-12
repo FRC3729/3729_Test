@@ -2,11 +2,10 @@ package org.usfirst.frc.team3729.robot;
 
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends Thread {
-	Input _input;
-	
-    private static Drive INSTANCE = null;
+	private static Drive INSTANCE = null;
     
 	private Talon leftMotor0;
     private Talon leftMotor1;
@@ -18,17 +17,19 @@ public class Drive extends Thread {
     private Ultrasonic sonar0;
     private Ultrasonic sonar1;
     
+    Input _input;
+    
     private Drive() {
-        leftMotor0 = new Talon(Params.port_l0);
-        leftMotor1 = new Talon(Params.port_l1);
-        rightMotor0 = new Talon(Params.port_r0);
-        rightMotor1 = new Talon(Params.port_r1);
-        centerMotor0 = new Talon(Params.port_c0);
-        centerMotor1 = new Talon(Params.port_c1);
+        leftMotor0 = new Talon(Params.port_Talon_left[0]);
+        leftMotor1 = new Talon(Params.port_Talon_left[1]);
+        rightMotor0 = new Talon(Params.port_Talon_right[0]);
+        rightMotor1 = new Talon(Params.port_Talon_right[1]);
+        centerMotor0 = new Talon(Params.port_Talon_center[0]);
+        centerMotor1 = new Talon(Params.port_Talon_center[1]);
         
-        sonar0 = new Ultrasonic(Params.port_sonar0_in,Params.port_sonar0_out);
+        sonar0 = new Ultrasonic(Params.port_Sonar_in[0],Params.port_Sonar_out[0]);
         sonar0.setEnabled(true);
-        sonar1 = new Ultrasonic(Params.port_sonar1_in,Params.port_sonar1_out);
+        sonar1 = new Ultrasonic(Params.port_Sonar_in[1],Params.port_Sonar_out[1]);
         sonar1.setEnabled(true);
         sonar1.setAutomaticMode(true);
         
@@ -43,20 +44,24 @@ public class Drive extends Thread {
     }
     
     public void run() {
-    	if (_input.getButton(0, 1)) {
-    		Hdrive(_input.getAxis(0,0) * Params.creep_speed, _input.getAxis(0,1) * Params.creep_speed, _input.getAxis(1,0));
-    	} else if (_input.getButton(1, 1)) {
-    		Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0) * Params.creep_speed);
-    	} else if (_input.getButton(0, 3)) {
+    	//Drive Mode
+    	if (_input.getButton(0, 1)) { //Creep on the first joystick
+    		Hdrive(_input.getAxis(0,0) * Params.speed_creep, _input.getAxis(0,1) * Params.speed_creep, _input.getAxis(1,0));
+    	} else if (_input.getButton(1, 1)) { //Creep on the second joystick
+    		Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0) * Params.speed_creep);
+    	} else if (_input.getButton(0, 3)) { //Drive Tank
     		tank(-_input.getAxis(1,1) * .75, _input.getAxis(0,1) * .75);
-    	} else if (_input.getButton(1, 2)) {
-    		//SONAR ALIGN
+    	} else if (_input.getButton(1, 2)) { //Sonar Alignment
     		align();
-    	}
-    	else {
+    	} else { //Normal Drive with 6 wheel omni system
     		Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0));
-//    		_drive.Quad(_input.getAxis(0,0), _input.getAxis(0,1), -_input.getAxis(1,0));
-    	}   	
+    	} 	
+    	//Dashboard Displays
+    	while (Math.abs(sonar0.getRangeInches() - sonar1.getRangeInches()) <= 0.25) {
+    		SmartDashboard.putString("DB/String 5", "!!ALIGNED!!");
+    	}
+    	SmartDashboard.putString("DB/String 5", "                 ");
+    	
     }
     
     //Drive values for testing
@@ -67,7 +72,7 @@ public class Drive extends Thread {
     	System.out.println("Right : " + rightMotor0.get() + ", " + rightMotor1.get());
     	System.out.println("Center : " + centerMotor0.get() + ", " + centerMotor1.get());
     	try {
-			Thread.sleep(100);
+			Thread.sleep(100); //Make testing values actually readable
 		} catch (Exception e){
 			System.out.println(e);
 		}
@@ -76,9 +81,9 @@ public class Drive extends Thread {
     //!Sonar Auto-Align
     public void align() {
     	if (sonar0.getRangeInches() > sonar1.getRangeInches()) {
-    		this.tank(Params.creep_speed, 0.0);
+    		this.tank(Params.speed_creep, 0.0);
     	} else if (sonar0.getRangeInches() < sonar1.getRangeInches()) {
-    		this.tank(0.0, Params.creep_speed);
+    		this.tank(0.0, Params.speed_creep);
     	} else {
     		this.stopmotors();
     	}
