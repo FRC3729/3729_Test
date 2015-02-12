@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
 
@@ -17,8 +18,9 @@ public class Robot extends SampleRobot {
     protected void disabled()
     {
     	System.out.println("in Disabled");
-    	_drive.stop();
-    	_mech.stop();
+    	SmartDashboard.putString("DB/String 0", "== DISABLED ==");
+    	_drive.stopmotors();
+    	_mech.stopmotors();
     }
 
     protected void robotInit()
@@ -40,6 +42,10 @@ public class Robot extends SampleRobot {
         server.setQuality(51);
         //the camera name (ex "cam0") can be found through the roborio web interface
         server.startAutomaticCapture("cam0");
+        
+        //Start Threads
+        _drive.start();
+        _mech.start();
     }
 
     /**
@@ -47,6 +53,7 @@ public class Robot extends SampleRobot {
      */
     public void autonomous(){
         System.out.println("In auto");
+        SmartDashboard.putString("DB/String 0", "== AUTONOMOUS ==");
         auto_timer.start();
         while (isEnabled()){
             System.out.println("auto_timer: " + auto_timer.get());
@@ -58,45 +65,27 @@ public class Robot extends SampleRobot {
      */
     public void operatorControl(){
         System.out.println("in OpControl");
+        SmartDashboard.putString("DB/String 0", "== TELEOP ==");
 
         while (isEnabled())
         {
             // #### LIVE ROUTINES ####
-
-            //!Drive
-        	if (_input.getButton(0, 1)) {
-        		_drive.Hdrive(_input.getAxis(0,0) * Params.creep_speed, _input.getAxis(0,1) * Params.creep_speed, _input.getAxis(1,0));
-        	} else if (_input.getButton(1, 1)) {
-        		_drive.Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0) * Params.creep_speed);
-        	} else if (_input.getButton(0, 3)) {
-        		_drive.tank(-_input.getAxis(1,1) * .75, _input.getAxis(0,1) * .75);
-        	} else if (_input.getButton(1, 2)) {
-        		//SONAR ALIGN
-        		_drive.align();
-        	}
-        	else {
-        	_drive.Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0));
-//        	_drive.Quad(_input.getAxis(0,0), _input.getAxis(0,1), -_input.getAxis(1,0));
-        	}
-            
-            //!Mechanisms
-            _mech.intake();
-            _mech.arms();
-            _mech.elevator();
+        	_drive.run();
+        	_mech.run();
             
             //!Testing values
-            if (Params.testing_mech) {_mech.test(); Timer.delay(0.1);}
+            if (Params.testing_mech) {_mech.test();}
             if (Params.testing_input) {_input.test(); Timer.delay(0.1);}
-            if (Params.testing_drive) {_drive.test(); Timer.delay(0.1);}
+            if (Params.testing_drive) {_drive.test();}
         }
     }
     public void test(){
+    	SmartDashboard.putString("DB/String 0", "== TEST ==");
     	while (isTest() && isEnabled()) {
     		LiveWindow.run();
     		if (Params.testing_mech) {_mech.test();}
-            if (Params.testing_input) {_input.test();}
+            if (Params.testing_input) {_input.test(); Timer.delay(0.1);}
             if (Params.testing_drive) {_drive.test();}
-    		Timer.delay(0.3);
     	}
     }
 }

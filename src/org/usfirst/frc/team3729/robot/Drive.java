@@ -3,7 +3,7 @@ package org.usfirst.frc.team3729.robot;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
-public class Drive {
+public class Drive extends Thread {
 	Input _input;
 	
     private static Drive INSTANCE = null;
@@ -42,6 +42,23 @@ public class Drive {
         return INSTANCE;
     }
     
+    public void run() {
+    	if (_input.getButton(0, 1)) {
+    		Hdrive(_input.getAxis(0,0) * Params.creep_speed, _input.getAxis(0,1) * Params.creep_speed, _input.getAxis(1,0));
+    	} else if (_input.getButton(1, 1)) {
+    		Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0) * Params.creep_speed);
+    	} else if (_input.getButton(0, 3)) {
+    		tank(-_input.getAxis(1,1) * .75, _input.getAxis(0,1) * .75);
+    	} else if (_input.getButton(1, 2)) {
+    		//SONAR ALIGN
+    		align();
+    	}
+    	else {
+    		Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0));
+//    		_drive.Quad(_input.getAxis(0,0), _input.getAxis(0,1), -_input.getAxis(1,0));
+    	}   	
+    }
+    
     //Drive values for testing
     public void test() {
     	System.out.println("Sonar0: " + sonar0.getRangeInches());
@@ -49,6 +66,11 @@ public class Drive {
     	System.out.println("left : " + leftMotor0.get() + ", " + leftMotor1.get());
     	System.out.println("Right : " + rightMotor0.get() + ", " + rightMotor1.get());
     	System.out.println("Center : " + centerMotor0.get() + ", " + centerMotor1.get());
+    	try {
+			Thread.sleep(100);
+		} catch (Exception e){
+			System.out.println(e);
+		}
     }
     
     //!Sonar Auto-Align
@@ -58,7 +80,7 @@ public class Drive {
     	} else if (sonar0.getRangeInches() < sonar1.getRangeInches()) {
     		this.tank(0.0, Params.creep_speed);
     	} else {
-    		this.stop();
+    		this.stopmotors();
     	}
     }
     
@@ -89,7 +111,7 @@ public class Drive {
     	this.Hdrive(z, y, x);
     }
     //!Stopped
-    public void stop() {
+    public void stopmotors() {
         leftMotor0.set(0.0);
         leftMotor1.set(0.0);
         rightMotor0.set(0.0);

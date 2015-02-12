@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 
-public class Mechanisms {
+public class Mechanisms extends Thread {
 	
 	Input _input;
 	
@@ -56,11 +56,22 @@ public class Mechanisms {
         return INSTANCE;
     }
 	
+	public void run() {
+		intake();
+		arms();
+		elevator();
+	}
+	
 	public void test() {
 		System.out.println("Limit: " + limit_armsout.get());
 		System.out.println("Limit safety: " + limit_armsout_safety.get());
 		System.out.println("Encoder: " + encoder_elevator.get());
 		System.out.println("Elevator level: " + lvl);
+		try {
+			Thread.sleep(100);
+		} catch (Exception e){
+			System.out.println(e);
+		}
 	}
 	
 	public void setlvl(int level) {
@@ -157,17 +168,11 @@ public class Mechanisms {
 		}
 	}
 	
-	public void stop() {
+	public void stopmotors() {
 		arm0.set(Relay.Value.kOff);
 		arm1.set(Relay.Value.kOff);
 		intake.set(Relay.Value.kOff);
 		elevator0.set(0.0);
 		elevator1.set(0.0);
 	}
-	
-	
-	
-	
-	
-	
 }
