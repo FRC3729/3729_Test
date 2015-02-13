@@ -24,6 +24,7 @@ public class Mechanisms extends Thread {
 	
 	private boolean elevator;
 	private int lvl;
+	private int tote;
 	
 	Input _input;
 	
@@ -44,6 +45,7 @@ public class Mechanisms extends Thread {
 		_input = new Input();
 		
 		elevator = false;
+		tote = 0;
 		
 	}
 	
@@ -57,7 +59,8 @@ public class Mechanisms extends Thread {
 	public void run() {
 		intake();
 		arms();
-		setelevator(getelevator());
+		elevatorsimple();
+		setElevator(getElevator(), getTotes());
 		//Dashboard Displays
 		SmartDashboard.putBoolean("DB/LED 0", !elevator); //Display whether the Elevator is in position
 		SmartDashboard.putNumber("DB/Slider 0", lvl); //Display the Elevator's current level
@@ -77,7 +80,7 @@ public class Mechanisms extends Thread {
 	}
 	
 	//Controls belts on the arms
-	public void intake() { 
+	private void intake() { 
 		if (_input.getButton(2, 6)) { //Run the belts in
 			intake.set(Relay.Value.kReverse);
 			if (Params.testing_mech){ System.out.println("Intake going in");}
@@ -89,7 +92,7 @@ public class Mechanisms extends Thread {
 		}
 	}
 	//Pinching Mechanism for the arms
-	public void arms() { 
+	private void arms() { 
 		if (_input.getAxis(2, 2) >= .75) { //Arms Seperate
 			if (!limit_arm0out.get()) {
 				arm0.set(Relay.Value.kForward);
@@ -115,28 +118,25 @@ public class Mechanisms extends Thread {
 		} 
 	}
 	
-	public void setlvl(int level) {
-		if (!elevator) {
-			if (lvl > 0 && lvl < 5) { //Make sure it is a valid level
-				lvl = level;
-			} else {}
-		} else {}
+	private void elevatorsimple() {
+		elevator0.set(_input.getAxis(2,5));
+		elevator1.set(_input.getAxis(2,5));
 	}
 
-	public int getelevator() { 		
+	private int getElevator() { 		
 		//!Reset encoder to keep values accurate
 		if (limit_encoder_reset.get()) {
 			encoder_elevator.reset();
 		}
 		//!Elevator Level control
-		if (_input.xbox.getPOV() == 0) { //Move up a level
+		if (_input.getButton(2, 4)) { //Move up a level
 			if (!elevator) {
 				if (lvl > 0 && lvl < 5) {
 					lvl++;
 				}
 			}
 			elevator = true;
-		} else if (_input.xbox.getPOV() == 180) { //Move down a level
+		} else if (_input.getButton(2, 1)) { //Move down a level
 			if (!elevator) {
 				if (lvl > 0 && lvl < 5) {
 					lvl--;
@@ -146,26 +146,29 @@ public class Mechanisms extends Thread {
 		}
 		return lvl;
 	}
-	//Move the Elevator
-	private void setelevator(int level) {
-		//!Manual Elevator adjust
-		if (_input.getButton(2, 4)) { //Elevator up
-			elevator0.set(Params.speed_elevator);
-			elevator1.set(Params.speed_elevator);
-			if (Params.testing_mech){ System.out.println("elevator up");}
-		} else if (_input.getButton(2, 1)) { //Elevator Down
-			elevator0.set(-Params.speed_elevator);
-			elevator1.set(-Params.speed_elevator);
-			if (Params.testing_mech){ System.out.println("elevator down");}
+	private int getTotes() {
+		if (_input.xbox.getPOV() == 0) {
+			tote++;
+		} else if (_input.xbox.getPOV() == 180) {
+			tote--;
 		}
+		try {
+			Thread.sleep(100); 
+		} catch (Exception e){
+			System.out.println(e);
+		}
+		return tote;
+	}
+	//Move the Elevator
+	private void setElevator(int level, int tote) {
 		//!Elevator Level adjust
 		if (elevator) {
 			if (encoder_elevator.get() < Params.level_elevator[level]) { //If below, go Up
-				elevator0.set(Params.speed_elevator);
-				elevator1.set(Params.speed_elevator);
+				elevator0.set(Params.speed_elevator[tote]);
+				elevator1.set(Params.speed_elevator[tote]);
 			} else if (encoder_elevator.get() > Params.level_elevator[level]) {//If above, go Down
-				elevator0.set(-Params.speed_elevator);
-				elevator1.set(-Params.speed_elevator);
+				elevator0.set(-Params.speed_elevator[0]);
+				elevator1.set(-Params.speed_elevator[0]);
 			} else {
 				elevator0.set(0.0);
 				elevator1.set(0.0);

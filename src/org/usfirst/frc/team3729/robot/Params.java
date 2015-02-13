@@ -29,14 +29,14 @@ public class Params {
     public static final double speed_max = 0.85;
     public static final double speed_min = -0.85;
     public static final double speed_creep = .25;
-    public static final double speed_elevator = .55;
+    public static final double[] speed_elevator = {.25, .35, .50, .65, .85};
     //!Elevator levels
     public static final int[] level_elevator = {0,210,450,850,1100,1200};
     
     //!Testing information
     public static final boolean testing_drive = false;
     public static final boolean testing_input = false;
-    public static final boolean testing_mech = true;
+    public static final boolean testing_mech = false;
     
     //Useful Methods
     //!Slow the change of a value
