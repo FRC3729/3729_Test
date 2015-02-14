@@ -18,6 +18,8 @@ public class Mechanisms extends Thread {
 	private DigitalInput limit_arm0out;
 	private DigitalInput limit_arm1out;
 	
+	private int tote;
+	
 	Input _input;
 	
 	private Mechanisms() {
@@ -30,6 +32,8 @@ public class Mechanisms extends Thread {
 
 		limit_arm0out = new DigitalInput(Params.port_Limit_arm[0]);
 		limit_arm1out = new DigitalInput(Params.port_Limit_arm[1]);
+		
+		tote = 0;
 		
 		_input = new Input();
 	}
@@ -45,9 +49,11 @@ public class Mechanisms extends Thread {
 		intake();
 		arms();
 		elevatorsimple();
+		elevator(getTotes());
 		//Dashboard Displays
 		SmartDashboard.putBoolean("DB/LED 0", limit_arm0out.get());
 		SmartDashboard.putBoolean("DB/LED 1", limit_arm1out.get());
+		SmartDashboard.putNumber("DB/Slider 0", getTotes());
 	}
 	
 	//Give out testing values
@@ -105,6 +111,29 @@ public class Mechanisms extends Thread {
 		elevator1.set(_input.getAxis(2,5));
 	}
 
+	private void elevator(int totes) {
+		if (_input.getButton(2, 4)) {
+			elevator0.set(Params.speed_elevator[totes]);
+			elevator1.set(Params.speed_elevator[totes]);
+		} else if (_input.getButton(2, 1)) {
+			elevator0.set(-Params.speed_elevator[0]);
+			elevator1.set(-Params.speed_elevator[0]);
+		}
+	}
+	private int getTotes() {
+		if (_input.xbox.getPOV() == 0 && tote < 5) {
+				tote++;
+		} else if (_input.xbox.getPOV() == 180) {
+				tote = 0;
+		}
+		try {
+			Thread.sleep(100); 
+		} catch (Exception e){
+			System.out.println(e);
+		}
+		return tote;
+	}
+	
 	//STOP EVERYTHING
 	public void stopmotors() { 
 		arm0.set(Relay.Value.kOff);
