@@ -12,13 +12,9 @@ public class Params {
     public static final int port_Spike_intake = 2;
     //!Limit Switches -Digital I/O-
     public static final int[] port_Limit_arm = {0,1};
-    public static final int port_Limit_encoder_reset = 2;
-    //!Encoders -Digital I/O-
-    public static final int port_Encoder_elevator_aChannel = 3;
-    public static final int port_Encoder_elevator_bChannel = 4;
     //!Sonar -Digital I/O-
-    public static final int[] port_Sonar_in = {5,6};
-    public static final int[] port_Sonar_out = {7,8};
+    public static final int[] port_Sonar_in = {2,3};
+    public static final int[] port_Sonar_out = {4,5};
     
     //Adjustments
     //! Increment at which we ramp output from the axes
@@ -29,9 +25,6 @@ public class Params {
     public static final double speed_max = 0.85;
     public static final double speed_min = -0.85;
     public static final double speed_creep = .25;
-    public static final double[] speed_elevator = {.25, .35, .50, .65, .85};
-    //!Elevator levels
-    public static final int[] level_elevator = {0,210,450,850,1100,1200};
     
     //!Testing information
     public static final boolean testing_drive = false;
