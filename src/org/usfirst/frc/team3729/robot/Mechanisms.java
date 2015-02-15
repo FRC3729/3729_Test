@@ -22,6 +22,8 @@ public class Mechanisms extends Thread {
 	private Encoder encoder_arm0;
 	private Encoder encoder_arm1;
 	
+	private boolean narrow_pinch;
+	
 	Input _input;
 	
 	private Mechanisms() {
@@ -37,6 +39,8 @@ public class Mechanisms extends Thread {
 		
 		encoder_arm0 = new Encoder(Params.port_Encoder_aChannel_arm[0], Params.port_Encoder_bChannel_arm[0]);
 		encoder_arm1 = new Encoder(Params.port_Encoder_aChannel_arm[1], Params.port_Encoder_bChannel_arm[1]);
+		
+		narrow_pinch = false;
 		
 		_input = new Input();
 	}
@@ -84,6 +88,7 @@ public class Mechanisms extends Thread {
 	}
 	//Pinching Mechanism for the arms
 	private void arms() { 
+		getPinch();
 		if (_input.getAxis(2, 2) >= .75) { //Arms Seperate
 			if (!limit_arm0out.get()) {
 				arm0.set(Relay.Value.kForward);
@@ -92,9 +97,23 @@ public class Mechanisms extends Thread {
 			}
 			if (Params.testing_mech){ System.out.println("arms out");}
 		} else if (_input.getAxis(2, 3) >= .75) { //Arms Close
-			arm0.set(Relay.Value.kReverse);
-			arm1.set(Relay.Value.kForward);
-			if (Params.testing_mech){ System.out.println("arms in");}
+			if (narrow_pinch) {	
+				if (encoder_arm0.get() < Params.position_arm[0][2]) {
+					arm0.set(Relay.Value.kReverse);
+				}
+				if (encoder_arm1.get() < Params.position_arm[1][2]) {
+					arm1.set(Relay.Value.kForward);
+				}
+				if (Params.testing_mech){ System.out.println("arms in");}
+			} else if (!narrow_pinch) {
+				if (encoder_arm0.get() < Params.position_arm[0][1]) {
+					arm0.set(Relay.Value.kReverse);
+				}
+				if (encoder_arm1.get() < Params.position_arm[1][1]) {
+					arm1.set(Relay.Value.kForward);
+				}
+				if (Params.testing_mech){ System.out.println("arms in");}
+			}
 		} else if (_input.getButton(2, 3) && !limit_arm0out.get()) { //Arms Shift Left
 			arm0.set(Relay.Value.kForward);
 			arm1.set(Relay.Value.kForward);
@@ -107,6 +126,29 @@ public class Mechanisms extends Thread {
 			arm0.set(Relay.Value.kOff);
 			arm1.set(Relay.Value.kOff);
 		} 
+	}
+	private void getPinch() {
+		if (limit_arm0out.get()) {
+			encoder_arm0.reset();
+		}
+		if (limit_arm1out.get()) {
+			encoder_arm1.reset();
+		}
+		if (_input.xbox.getPOV() == 90) {
+			narrow_pinch = false;
+			try {
+				Thread.sleep(100); //Make testing values actually readable
+			} catch (Exception e){
+				System.out.println(e);
+			}
+		} else if (_input.xbox.getPOV() == 270) {
+			narrow_pinch = true;
+			try {
+				Thread.sleep(100); //Make testing values actually readable
+			} catch (Exception e){
+				System.out.println(e);
+			}
+		}
 	}
 	
 	private void elevatorsimple() {

@@ -28,6 +28,8 @@ public class Params {
     public static final double speed_max = 0.85;
     public static final double speed_min = -0.85;
     public static final double speed_creep = .25;
+    //!Pinch positions
+    public static final int[][] position_arm = {{0,55,450},{0,55,450}};
     
     //!Testing information
     public static final boolean testing_drive = false;
