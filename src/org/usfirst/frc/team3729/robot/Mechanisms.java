@@ -3,6 +3,7 @@ package org.usfirst.frc.team3729.robot;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Mechanisms extends Thread {
@@ -18,6 +19,9 @@ public class Mechanisms extends Thread {
 	private DigitalInput limit_arm0out;
 	private DigitalInput limit_arm1out;
 	
+	private Encoder encoder_arm0;
+	private Encoder encoder_arm1;
+	
 	Input _input;
 	
 	private Mechanisms() {
@@ -30,6 +34,9 @@ public class Mechanisms extends Thread {
 
 		limit_arm0out = new DigitalInput(Params.port_Limit_arm[0]);
 		limit_arm1out = new DigitalInput(Params.port_Limit_arm[1]);
+		
+		encoder_arm0 = new Encoder(Params.port_Encoder_aChannel_arm[0], Params.port_Encoder_bChannel_arm[0]);
+		encoder_arm1 = new Encoder(Params.port_Encoder_aChannel_arm[1], Params.port_Encoder_bChannel_arm[1]);
 		
 		_input = new Input();
 	}
@@ -54,6 +61,8 @@ public class Mechanisms extends Thread {
 	public void test() { 
 		System.out.println("Left Arm Limit: " + limit_arm0out.get());
 		System.out.println("Right Arm Limit: " + limit_arm1out.get());
+		System.out.println("Left Arm Encoder: " + encoder_arm0.get());
+		System.out.println("Right Arm Encoder: " + encoder_arm1.get());
 		try {
 			Thread.sleep(100); //Make testing values actually readable
 		} catch (Exception e){
