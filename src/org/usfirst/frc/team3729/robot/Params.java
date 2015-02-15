@@ -15,6 +15,9 @@ public class Params {
     //!Sonar -Digital I/O-
     public static final int[] port_Sonar_in = {2,3};
     public static final int[] port_Sonar_out = {4,5};
+    //!Encoders -Digital I/O
+    public static final int[] port_Encoder_aChannel_arm = {6,7};
+    public static final int[] port_Encoder_bChannel_arm = {8,9};
     
     //Adjustments
     //! Increment at which we ramp output from the axes
@@ -26,11 +29,13 @@ public class Params {
     public static final double speed_min = -0.85;
     public static final double speed_creep = .25;
     public static final double[] speed_elevator = {.45, .55, .65, .75, .85, .95};
+    //!Pinch positions
+    public static final int[][] position_arm = {{0,55,450},{0,55,450}};
     
     //!Testing information
     public static final boolean testing_drive = false;
     public static final boolean testing_input = false;
-    public static final boolean testing_mech = false;
+    public static final boolean testing_mech = true;
     
     //Useful Methods
     //!Slow the change of a value
