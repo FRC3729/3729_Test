@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3729.robot;
 
 public class Params {
-	//Port allocations
+	//Port allocations PWM-10, Relay-4, DIO-10, Analog-4, SPI-1, I2C -1, RS232-1
     //!Talons -PWM-
     public static final int[] port_Talon_left = {0,2};
     public static final int[] port_Talon_right = {1,3};
@@ -12,10 +12,10 @@ public class Params {
     public static final int port_Spike_intake = 2;
     //!Limit Switches -Digital I/O-
     public static final int[] port_Limit_arm = {0,1};
-    //!Sonar -Digital I/O-
+    //!Ultrasonics(2 Ports) -Digital I/O-
     public static final int[] port_Sonar_in = {2,3};
     public static final int[] port_Sonar_out = {4,5};
-    //!Encoders -Digital I/O
+    //!Encoders(2 Ports) -Digital I/O-
     public static final int[] port_Encoder_aChannel_arm = {6,7};
     public static final int[] port_Encoder_bChannel_arm = {8,9};
     
@@ -30,7 +30,7 @@ public class Params {
     public static final double speed_creep = .25;
     public static final double[] speed_elevator = {.45, .55, .65, .75, .85, .95};
     //!Pinch positions
-    public static final int[][] position_arm = {{0,55,450},{0,55,450}};
+    public static final int[][] position_arm = {{55,450},{55,450}};
     
     //!Testing information
     public static final boolean testing_drive = false;
