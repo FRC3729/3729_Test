@@ -48,8 +48,8 @@ public class Mechanisms extends Thread {
 	public void run() {
 		intake();
 		arms();
-		elevatorsimple();
-		elevator(getTotes());
+		elevatorsimple(getTotes());
+//		elevator(getTotes());
 		//Dashboard Displays
 		SmartDashboard.putBoolean("DB/LED 0", limit_arm0out.get());
 		SmartDashboard.putBoolean("DB/LED 1", limit_arm1out.get());
@@ -60,6 +60,7 @@ public class Mechanisms extends Thread {
 	public void test() { 
 		System.out.println("Left Arm Limit: " + limit_arm0out.get());
 		System.out.println("Right Arm Limit: " + limit_arm1out.get());
+		System.out.println("Totes: " + getTotes());
 		try {
 			Thread.sleep(100); //Make testing values actually readable
 		} catch (Exception e){
@@ -106,30 +107,42 @@ public class Mechanisms extends Thread {
 		} 
 	}
 	
-	private void elevatorsimple() {
-		elevator0.set(_input.getAxis(2,5));
-		elevator1.set(_input.getAxis(2,5));
+	private void elevatorsimple(int totes) {
+//		if (_input.getAxis(2, 5) <= 0.0) {
+//			elevator0.set(_input.getAxis(2,5) * Params.speed_creep);
+//			elevator1.set(_input.getAxis(2,5) * Params.speed_creep);
+//		} else {
+			elevator0.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
+			elevator1.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
+//		}
 	}
 
 	private void elevator(int totes) {
 		if (_input.getButton(2, 4)) {
-			elevator0.set(Params.speed_elevator[totes]);
-			elevator1.set(Params.speed_elevator[totes]);
+			elevator0.set(-Params.speed_elevator[totes]);
+			elevator1.set(-Params.speed_elevator[totes]);
+			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_elevator[totes]));}
 		} else if (_input.getButton(2, 1)) {
-			elevator0.set(-Params.speed_elevator[0]);
-			elevator1.set(-Params.speed_elevator[0]);
+			elevator0.set(Params.speed_creep);
+			elevator1.set(Params.speed_creep);
+			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_creep));}
 		}
 	}
 	private int getTotes() {
 		if (_input.xbox.getPOV() == 0 && tote < 5) {
 				tote++;
+				try {
+					Thread.sleep(150); 
+				} catch (Exception e){
+					System.out.println(e);
+				}
 		} else if (_input.xbox.getPOV() == 180) {
 				tote = 0;
-		}
-		try {
-			Thread.sleep(100); 
-		} catch (Exception e){
-			System.out.println(e);
+				try {
+					Thread.sleep(150); 
+				} catch (Exception e){
+					System.out.println(e);
+				}
 		}
 		return tote;
 	}

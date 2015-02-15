@@ -25,7 +25,7 @@ public class Params {
     public static final double speed_max = 0.85;
     public static final double speed_min = -0.85;
     public static final double speed_creep = .25;
-    public static final double[] speed_elevator = {.25, .35, .50, .65, .85};
+    public static final double[] speed_elevator = {.45, .55, .65, .75, .85, .95};
     
     //!Testing information
     public static final boolean testing_drive = false;

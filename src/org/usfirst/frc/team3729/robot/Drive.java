@@ -51,17 +51,17 @@ public class Drive extends Thread {
     		Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0) * Params.speed_creep);
     	} else if (_input.getButton(0, 3)) { //Drive Tank
     		tank(-_input.getAxis(1,1) * .75, _input.getAxis(0,1) * .75);
-    	} else if (_input.getButton(1, 2)) { //Sonar Alignment
+    	} else if (_input.getButton(1, 3)) { //Sonar Alignment
     		align();
     	} else { //Normal Drive with 6 wheel omni system
     		Hdrive(_input.getAxis(0,0), _input.getAxis(0,1), _input.getAxis(1,0));
     	} 	
     	//Dashboard Displays
-    	while (Math.abs(sonar0.getRangeInches() - sonar1.getRangeInches()) <= 0.25) {
+    	if (Math.abs(sonar0.getRangeInches() - sonar1.getRangeInches()) <= 0.25) {
     		SmartDashboard.putString("DB/String 5", "!!ALIGNED!!");
-    	}
+    	} else {
     	SmartDashboard.putString("DB/String 5", "                 ");
-    	
+    	}
     }
     
     //Drive values for testing
