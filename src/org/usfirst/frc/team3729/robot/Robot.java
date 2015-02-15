@@ -25,9 +25,9 @@ public class Robot extends SampleRobot {
 
     protected void robotInit()
     {
-        _input = Input.getInstance();
-        _drive = Drive.getInstance();
-        _mech = Mechanisms.getInstance();
+        _input = new Input();
+        _drive = new Drive();
+        _mech = new Mechanisms();
         auto_timer = new Timer();
         
         //Print banner
@@ -75,7 +75,7 @@ public class Robot extends SampleRobot {
             
             //!Testing values
             if (Params.testing_mech) {_mech.test();}
-            if (Params.testing_input) {_input.test(); Timer.delay(0.1);}
+            if (Params.testing_input) {_input.test();}
             if (Params.testing_drive) {_drive.test();}
         }
     }
@@ -84,7 +84,7 @@ public class Robot extends SampleRobot {
     	while (isTest() && isEnabled()) {
     		LiveWindow.run();
     		if (Params.testing_mech) {_mech.test();}
-            if (Params.testing_input) {_input.test(); Timer.delay(0.1);}
+            if (Params.testing_input) {_input.test();}
             if (Params.testing_drive) {_drive.test();}
     	}
     }

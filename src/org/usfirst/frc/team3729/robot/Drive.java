@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends Thread {
-	private static Drive INSTANCE = null;
-    
 	private Talon leftMotor0;
     private Talon leftMotor1;
     private Talon rightMotor0;
@@ -19,7 +17,7 @@ public class Drive extends Thread {
     
     Input _input;
     
-    private Drive() {
+    public Drive() {
         leftMotor0 = new Talon(Params.port_Talon_left[0]);
         leftMotor1 = new Talon(Params.port_Talon_left[1]);
         rightMotor0 = new Talon(Params.port_Talon_right[0]);
@@ -32,17 +30,8 @@ public class Drive extends Thread {
         sonar1 = new Ultrasonic(Params.port_Sonar_in[1],Params.port_Sonar_out[1]);
         sonar1.setEnabled(true);
         sonar1.setAutomaticMode(true);
-        
-        _input = new Input();
     }
-    
-    public static Drive getInstance() {
-        if (INSTANCE == null)
-            INSTANCE = new Drive();
-        
-        return INSTANCE;
-    }
-    
+
     public void run() {
     	//Drive Mode
     	if (_input.getButton(0, 1)) { //Creep on the first joystick
@@ -79,7 +68,7 @@ public class Drive extends Thread {
     }
     
     //!Sonar Auto-Align
-    public void align() {
+    private void align() {
     	if (sonar0.getRangeInches() > sonar1.getRangeInches()) {
     		this.tank(Params.speed_creep, 0.0);
     	} else if (sonar0.getRangeInches() < sonar1.getRangeInches()) {
@@ -91,14 +80,14 @@ public class Drive extends Thread {
     
     //Drive Modes
     //!Tank Drive
-    public void tank(double left, double right) {
+    private void tank(double left, double right) {
         leftMotor0.set(left);
         leftMotor1.set(left);
         rightMotor0.set(right);
         rightMotor1.set(right);
     }    
     //!H Drive
-    public void Hdrive(double x, double y, double z) {
+    private void Hdrive(double x, double y, double z) {
         centerMotor0.set(z);
         centerMotor1.set(z);
         
@@ -110,10 +99,6 @@ public class Drive extends Thread {
         leftMotor1.set(-left);
         rightMotor0.set(right);
         rightMotor1.set(right);
-    }
-    //!Quad Drive
-    public void Quad(double x, double y, double z){
-    	this.Hdrive(z, y, x);
     }
     //!Stopped
     public void stopmotors() {

@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Mechanisms extends Thread {
-	private static Mechanisms INSTANCE = null;
-	
+public class Mechanisms extends Thread {	
 	private Relay arm0;
 	private Relay arm1;
 	private Relay intake;
@@ -28,7 +26,7 @@ public class Mechanisms extends Thread {
 	
 	Input _input;
 	
-	private Mechanisms() {
+	public Mechanisms() {
 		arm0 = new Relay(Params.port_Spike_arm[0]);
 		arm1 = new Relay(Params.port_Spike_arm[1]);
 		intake = new Relay(Params.port_Spike_intake);
@@ -41,16 +39,7 @@ public class Mechanisms extends Thread {
 		
 		encoder_arm0 = new Encoder(Params.port_Encoder_aChannel_arm[0], Params.port_Encoder_bChannel_arm[0]);
 		encoder_arm1 = new Encoder(Params.port_Encoder_aChannel_arm[1], Params.port_Encoder_bChannel_arm[1]);
-		
-		_input = new Input();
 	}
-	
-	public static Mechanisms getInstance() {
-        if (INSTANCE == null)
-            INSTANCE = new Mechanisms();
-        
-        return INSTANCE;
-    }
 	
 	public void run() {
 		intake();
@@ -91,6 +80,49 @@ public class Mechanisms extends Thread {
 			intake.set(Relay.Value.kOff);
 		}
 	}
+	private void setarms() { 
+		if (_input.getAxis(2, 2) >= .75) { //Arms Seperate
+			arms(0,-1);
+			arms(1,-1);
+			if (Params.testing_mech){ System.out.println("arms out");}
+		} else if (_input.getAxis(2, 3) >= .75) { //Arms Close
+			arms(0,1);
+			arms(1,1);
+			if (Params.testing_mech){ System.out.println("arms in");}
+		} else if (_input.getButton(2, 3) && !limit_arm0out.get()) { //Arms Shift Left
+			arm0.set(Relay.Value.kForward);
+			arm1.set(Relay.Value.kForward);
+			if (Params.testing_mech){ System.out.println("arms left");}
+		} else if (_input.getButton(2, 2) && !limit_arm1out.get()) { //Arms Shift Right
+			arm0.set(Relay.Value.kReverse);
+			arm1.set(Relay.Value.kReverse);
+			if (Params.testing_mech){ System.out.println("arms right");}
+		} else {
+			arms(0,0);
+			arms(1,0);
+		} 
+	}
+	private void elevatorsimple(int totes) {
+		if (_input.getAxis(2, 5) <= 0.0) {
+			elevator0.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
+			elevator1.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
+		} else {
+			elevator0.set(_input.getAxis(2,5) * Params.speed_creep);
+			elevator1.set(_input.getAxis(2,5) * Params.speed_creep);
+		}
+	}
+	private void elevator(int totes) {
+		if (_input.getButton(2, 4)) {
+			elevator0.set(-Params.speed_elevator[totes]);
+			elevator1.set(-Params.speed_elevator[totes]);
+			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_elevator[totes]));}
+		} else if (_input.getButton(2, 1)) {
+			elevator0.set(Params.speed_creep);
+			elevator1.set(Params.speed_creep);
+			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_creep));}
+		}
+	}
+	
 	//Pinching Mechanism for the arms
 	private void arms(int arm, int state) {
 		switch (arm) {
@@ -134,28 +166,6 @@ public class Mechanisms extends Thread {
 			}
 		}			
 	}
-	private void setarms() { 
-		if (_input.getAxis(2, 2) >= .75) { //Arms Seperate
-			arms(0,-1);
-			arms(1,-1);
-			if (Params.testing_mech){ System.out.println("arms out");}
-		} else if (_input.getAxis(2, 3) >= .75) { //Arms Close
-			arms(0,1);
-			arms(1,1);
-			if (Params.testing_mech){ System.out.println("arms in");}
-		} else if (_input.getButton(2, 3) && !limit_arm0out.get()) { //Arms Shift Left
-			arm0.set(Relay.Value.kForward);
-			arm1.set(Relay.Value.kForward);
-			if (Params.testing_mech){ System.out.println("arms left");}
-		} else if (_input.getButton(2, 2) && !limit_arm1out.get()) { //Arms Shift Right
-			arm0.set(Relay.Value.kReverse);
-			arm1.set(Relay.Value.kReverse);
-			if (Params.testing_mech){ System.out.println("arms right");}
-		} else {
-			arms(0,0);
-			arms(1,0);
-		} 
-	}
 	private boolean getPinch() {
 		if (limit_arm0out.get()) {
 			encoder_arm0.reset();
@@ -166,41 +176,19 @@ public class Mechanisms extends Thread {
 		if (_input.xbox.getPOV() == 90) {
 			narrow_pinch = false;
 			try {
-				Thread.sleep(100); //Make testing values actually readable
+				Thread.sleep(150); //Make testing values actually readable
 			} catch (Exception e){
 				System.out.println(e);
 			}
 		} else if (_input.xbox.getPOV() == 270) {
 			narrow_pinch = true;
 			try {
-				Thread.sleep(100); //Make testing values actually readable
+				Thread.sleep(150); //Make testing values actually readable
 			} catch (Exception e){
 				System.out.println(e);
 			}
 		}
 		return narrow_pinch;
-	}
-	
-	private void elevatorsimple(int totes) {
-		if (_input.getAxis(2, 5) <= 0.0) {
-			elevator0.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
-			elevator1.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
-		} else {
-			elevator0.set(_input.getAxis(2,5) * Params.speed_creep);
-			elevator1.set(_input.getAxis(2,5) * Params.speed_creep);
-		}
-	}
-
-	private void elevator(int totes) {
-		if (_input.getButton(2, 4)) {
-			elevator0.set(-Params.speed_elevator[totes]);
-			elevator1.set(-Params.speed_elevator[totes]);
-			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_elevator[totes]));}
-		} else if (_input.getButton(2, 1)) {
-			elevator0.set(Params.speed_creep);
-			elevator1.set(Params.speed_creep);
-			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_creep));}
-		}
 	}
 	private int getTotes() {
 		if (_input.xbox.getPOV() == 0 && tote < 5) {
