@@ -28,9 +28,9 @@ public class Params {
     public static final double speed_max = 0.85;
     public static final double speed_min = -0.85;
     public static final double speed_creep = .25;
-    public static final double[] speed_elevator = {.45, .55, .65, .75, .85, .95};
-    //!Pinch positions
-    public static final int[][] position_arm = {{55,450},{55,450}};
+    public static final double[][] speed_elevator = {{.45, .55, .65, .75, .85, .95},{.45,.35,.3,.25,.2,.15}};
+    //!Pinch positions !wide!narrow!center!
+    public static final int[][] position_arm = {{55,450,500},{55,450,500}};
     
     //!Testing information
     public static final boolean testing_drive = false;
