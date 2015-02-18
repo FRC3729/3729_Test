@@ -22,9 +22,7 @@ public class Mechanisms extends Thread {
 	private Encoder encoder_arm0;
 	private Encoder encoder_arm1;
 	
-	private boolean narrow_pinch = false;
-	private boolean[] position_pinch = {false, false};
-	private int tote = 0;
+	private int narrow_pinch = 0;
 	
 	Input _input;
 	
@@ -54,22 +52,19 @@ public class Mechanisms extends Thread {
 	
 	public void run() {
 		intake();
-		setarms();
-		elevatorsimple(getTotes());
-		if (!Params.testing_mech){elevator(getTotes());}
+		arms();
+		elevatorsimple();
 		//Dashboard Displays
-		SmartDashboard.putBoolean("DB/Button 0", getPinch());
-		SmartDashboard.putBoolean("DB/LED 0", position_pinch[0] && position_pinch[1]);
+		SmartDashboard.putBoolean("DB/Button 0", (getPinch() == 1));
+		SmartDashboard.putBoolean("DB/LED 0", encoder_arm0.get() == Params.position_arm[0][getPinch()] && encoder_arm1.get() == Params.position_arm[1][getPinch()]);
 		SmartDashboard.putBoolean("DB/LED 1", limit_arm0out.get());
 		SmartDashboard.putBoolean("DB/LED 2", limit_arm1out.get());
-		SmartDashboard.putNumber("DB/Slider 0", getTotes());
 	}
 	
 	//Give out testing values
 	public void test() { 
 		System.out.println("Left Arm Limit: " + limit_arm0out.get());
 		System.out.println("Right Arm Limit: " + limit_arm1out.get());
-		System.out.println("Totes: " + getTotes());
 		System.out.println("Left Arm Encoder: " + encoder_arm0.get());
 		System.out.println("Right Arm Encoder: " + encoder_arm1.get());
 		try {
@@ -92,56 +87,26 @@ public class Mechanisms extends Thread {
 		}
 	}
 	//Pinching Mechanism for the arms
-	private void arms(int arm, int state) {
-		switch (arm) {
-			case 0:
-				switch (state) {
-					case -1:
-						if (!limit_arm0out.get()) {
-							arm0.set(Relay.Value.kForward);
-						} else {
-							arm0.set(Relay.Value.kOff);
-						}
-					case 0:
-						arm0.set(Relay.Value.kOff);
-					case 1:
-						if (getPinch() && encoder_arm0.get() < Params.position_arm[0][1]) {
-							arm0.set(Relay.Value.kReverse);
-						} else if (!getPinch() && encoder_arm0.get() < Params.position_arm[0][0]) {
-							arm0.set(Relay.Value.kReverse);
-						} else {
-							arm0.set(Relay.Value.kOff);
-							position_pinch[0] = true;
-						}
-				}
-			case 1:
-				switch (state) {
-					case -1:
-						if (!limit_arm1out.get()) {
-							arm1.set(Relay.Value.kReverse);
-						}
-					case 0:
-						arm1.set(Relay.Value.kOff);
-					case 1:
-						if (getPinch() && encoder_arm1.get() < Params.position_arm[1][1]) {
-							arm1.set(Relay.Value.kForward);
-						} else if (!getPinch() && encoder_arm1.get() < Params.position_arm[1][0]) {
-							arm1.set(Relay.Value.kForward);
-						} else {
-							arm1.set(Relay.Value.kOff);
-							position_pinch[1] = true;
-						}
-			}
-		}			
-	}
-	private void setarms() { 
+	private void arms() { 
 		if (_input.getAxis(2, 2) >= .75) { //Arms Seperate
-			arms(0,-1);
-			arms(1,-1);
+			if (!limit_arm0out.get()) {
+				arm0.set(Relay.Value.kForward);
+			}
+			if (!limit_arm1out.get()) {
+				arm1.set(Relay.Value.kReverse);
+			}
 			if (Params.testing_mech){ System.out.println("arms out");}
 		} else if (_input.getAxis(2, 3) >= .75) { //Arms Close
-			arms(0,1);
-			arms(1,1);
+			if (encoder_arm0.get() > Params.position_arm[0][getPinch()]) {
+				arm0.set(Relay.Value.kReverse);
+			} else if (encoder_arm0.get() <= Params.position_arm[0][getPinch()]){
+				arm0.set(Relay.Value.kOff);
+			}
+			if (encoder_arm1.get() < Params.position_arm[1][getPinch()]) {
+				arm1.set(Relay.Value.kForward);
+			} else if (encoder_arm1.get() >= Params.position_arm[1][getPinch()]){
+				arm1.set(Relay.Value.kOff);
+			}
 			if (Params.testing_mech){ System.out.println("arms in");}
 		} else if (_input.getButton(2, 3) && !limit_arm0out.get()) { //Arms Shift Left
 			arm0.set(Relay.Value.kForward);
@@ -152,26 +117,26 @@ public class Mechanisms extends Thread {
 			arm1.set(Relay.Value.kReverse);
 			if (Params.testing_mech){ System.out.println("arms right");}
 		} else {
-			arms(0,0);
-			arms(1,0);
+			arm0.set(Relay.Value.kOff);
+			arm1.set(Relay.Value.kOff);
 		} 
 	}
-	private boolean getPinch() {
+	private int getPinch() {
 		if (limit_arm0out.get()) {
 			encoder_arm0.reset();
 		}
 		if (limit_arm1out.get()) {
 			encoder_arm1.reset();
 		}
-		if (_input.xbox.getPOV() == 90) {
-			narrow_pinch = false;
+		if (_input.xbox.getPOV() == 270) {
+			narrow_pinch = 0;
 			try {
 				Thread.sleep(100); //Make testing values actually readable
 			} catch (Exception e){
 				System.out.println(e);
 			}
-		} else if (_input.xbox.getPOV() == 270) {
-			narrow_pinch = true;
+		} else if (_input.xbox.getPOV() == 90) {
+			narrow_pinch = 1;
 			try {
 				Thread.sleep(100); //Make testing values actually readable
 			} catch (Exception e){
@@ -181,44 +146,14 @@ public class Mechanisms extends Thread {
 		return narrow_pinch;
 	}
 	
-	private void elevatorsimple(int totes) {
+	private void elevatorsimple() {
 		if (_input.getAxis(2, 5) <= 0.0) {
-			elevator0.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
-			elevator1.set(_input.getAxis(2,5) * Params.speed_elevator[totes]);
+			elevator0.set(_input.getAxis(2,5));
+			elevator1.set(_input.getAxis(2,5));
 		} else {
 			elevator0.set(_input.getAxis(2,5) * Params.speed_creep);
 			elevator1.set(_input.getAxis(2,5) * Params.speed_creep);
 		}
-	}
-
-	private void elevator(int totes) {
-		if (_input.getButton(2, 4)) {
-			elevator0.set(-Params.speed_elevator[totes]);
-			elevator1.set(-Params.speed_elevator[totes]);
-			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_elevator[totes]));}
-		} else if (_input.getButton(2, 1)) {
-			elevator0.set(Params.speed_creep);
-			elevator1.set(Params.speed_creep);
-			if (Params.testing_mech){ System.out.println("Elevator speed: " + (Params.speed_creep));}
-		}
-	}
-	private int getTotes() {
-		if (_input.xbox.getPOV() == 0 && tote < 5) {
-				tote++;
-				try {
-					Thread.sleep(150); 
-				} catch (Exception e){
-					System.out.println(e);
-				}
-		} else if (_input.xbox.getPOV() == 180) {
-				tote = 0;
-				try {
-					Thread.sleep(150); 
-				} catch (Exception e){
-					System.out.println(e);
-				}
-		}
-		return tote;
 	}
 	
 	//STOP EVERYTHING

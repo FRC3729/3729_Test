@@ -29,6 +29,7 @@ public class Drive extends Thread {
         
         sonar0 = new Ultrasonic(Params.port_Sonar_in[0],Params.port_Sonar_out[0]);
         sonar0.setEnabled(true);
+//        sonar0.setAutomaticMode(true);
         sonar1 = new Ultrasonic(Params.port_Sonar_in[1],Params.port_Sonar_out[1]);
         sonar1.setEnabled(true);
         sonar1.setAutomaticMode(true);
@@ -83,7 +84,7 @@ public class Drive extends Thread {
     	if (sonar0.getRangeInches() > sonar1.getRangeInches()) {
     		this.tank(Params.speed_creep, 0.0);
     	} else if (sonar0.getRangeInches() < sonar1.getRangeInches()) {
-    		this.tank(0.0, Params.speed_creep);
+    		this.tank(0.0, -Params.speed_creep);
     	} else {
     		this.stopmotors();
     	}
