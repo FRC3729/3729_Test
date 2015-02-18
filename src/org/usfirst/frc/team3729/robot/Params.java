@@ -28,14 +28,13 @@ public class Params {
     public static final double speed_max = 0.85;
     public static final double speed_min = -0.85;
     public static final double speed_creep = .25;
-    public static final double[][] speed_elevator = {{.45, .55, .65, .75, .85, .95},{.45,.35,.3,.25,.2,.15}};
     //!Pinch positions !wide!narrow!center!
-    public static final int[][] position_arm = {{55,450,500},{55,450,500}};
+    public static final int[][] position_arm = {{-11,-205},{20,339}};
     
     //!Testing information
     public static final boolean testing_drive = false;
     public static final boolean testing_input = false;
-    public static final boolean testing_mech = true;
+    public static final boolean testing_mech = false;
     
     //Useful Methods
     //!Slow the change of a value

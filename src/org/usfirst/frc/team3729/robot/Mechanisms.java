@@ -17,9 +17,7 @@ public class Mechanisms extends Thread {
 	
 	private Encoder encoder_arm[];
 	
-	private boolean narrow_pinch = false;
-	private boolean[] position_pinch = {false, false};
-	private int tote = 0;
+	private int narrow_pinch = 0;
 	
 	Input _input;
 	
@@ -40,22 +38,19 @@ public class Mechanisms extends Thread {
 	
 	public void run() {
 		intake();
-		setarms();
-		elevatorsimple(getTotes());
-		if (!Params.testing_mech){elevator(getTotes());}
+		arms();
+		elevatorsimple();
 		//Dashboard Displays
-		SmartDashboard.putBoolean("DB/Button 0", getPinch());
-		SmartDashboard.putBoolean("DB/LED 0", position_pinch[0] && position_pinch[1]);
+		SmartDashboard.putBoolean("DB/Button 0", (getPinch() == 1));
+		SmartDashboard.putBoolean("DB/LED 0", encoder_arm[0].get() == Params.position_arm[0][getPinch()] && encoder_arm[1].get() == Params.position_arm[1][getPinch()]);
 		SmartDashboard.putBoolean("DB/LED 1", limit_armout[0].get());
 		SmartDashboard.putBoolean("DB/LED 2", limit_armout[1].get());
-		SmartDashboard.putNumber("DB/Slider 0", getTotes());
 	}
 	
 	//Give out testing values
 	public void test() { 
 		System.out.println("Left Arm Limit: " + limit_armout[0].get());
 		System.out.println("Right Arm Limit: " + limit_armout[1].get());
-		System.out.println("Totes: " + getTotes());
 		System.out.println("Left Arm Encoder: " + encoder_arm[0].get());
 		System.out.println("Right Arm Encoder: " + encoder_arm[1].get());
 		System.out.println("Elevator: " + elevator0.get() + ", " + elevator1.get());
@@ -78,14 +73,27 @@ public class Mechanisms extends Thread {
 			intake.set(Relay.Value.kOff);
 		}
 	}
-	private void setarms() { 
+	//Pinching Mechanism for the arms
+	private void arms() { 
 		if (_input.getAxis(2, 2) >= .75) { //Arms Seperate
-			arms(0,-1);
-			arms(1,-1);
+			if (!limit_armout[0].get()) {
+				arm[0].set(Relay.Value.kForward);
+			}
+			if (!limit_armout[1].get()) {
+				arm[1].set(Relay.Value.kReverse);
+			}
 			if (Params.testing_mech){ System.out.println("arms out");}
 		} else if (_input.getAxis(2, 3) >= .75) { //Arms Close
-			arms(0,1);
-			arms(1,1);
+			if (encoder_arm[0].get() > Params.position_arm[0][getPinch()]) {
+				arm[0].set(Relay.Value.kReverse);
+			} else if (encoder_arm[0].get() <= Params.position_arm[0][getPinch()]){
+				arm[0].set(Relay.Value.kOff);
+			}
+			if (encoder_arm[1].get() < Params.position_arm[1][getPinch()]) {
+				arm[1].set(Relay.Value.kForward);
+			} else if (encoder_arm[1].get() >= Params.position_arm[1][getPinch()]){
+				arm[1].set(Relay.Value.kOff);
+			}
 			if (Params.testing_mech){ System.out.println("arms in");}
 		} else if (_input.getButton(2, 3) && !limit_armout[0].get() && encoder_arm[1].get() < Params.position_arm[1][2]) { //Arms Shift Left
 			arm[0].set(Relay.Value.kForward);
@@ -96,94 +104,33 @@ public class Mechanisms extends Thread {
 			arm[1].set(Relay.Value.kReverse);
 			if (Params.testing_mech){ System.out.println("arms right");}
 		} else {
-			arms(0,0);
-			arms(1,0);
+			arm[0].set(Relay.Value.kOff);
+			arm[1].set(Relay.Value.kOff);
 		} 
 	}
-	private void elevatorsimple(int totes) {
-		if (_input.getAxis(2, 5) <= 0.0) {
-			elevator0.set(_input.getAxis(2,5) * Params.speed_elevator[0][totes]);
-			elevator1.set(_input.getAxis(2,5) * Params.speed_elevator[0][totes]);
-		} else {
-			elevator0.set(_input.getAxis(2,5) * Params.speed_elevator[1][totes]);
-			elevator1.set(_input.getAxis(2,5) * Params.speed_elevator[1][totes]);
+	private int getPinch() {
+		if (limit_armout[0].get()) {
+			encoder_arm[0].reset();
 		}
-	}
-	private void elevator(int totes) {
-		if (_input.getButton(2, 4)) {
-			elevator0.set(-Params.speed_elevator[0][totes]);
-			elevator1.set(-Params.speed_elevator[0][totes]);
-		} else if (_input.getButton(2, 1)) {
-			elevator0.set(Params.speed_elevator[1][totes]);
-			elevator1.set(Params.speed_elevator[1][totes]);
+		if (limit_armout[1].get()) {
+			encoder_arm[1].reset();
 		}
-	}
-	
-	//Pinching Mechanism for the arms
-	private void arms(int side, int state) {
-		if (limit_armout[side].get()) {
-			encoder_arm[side].reset();
-		}
-		switch (state) {
-		case -1:
-			arm[0].setDirection(Relay.Direction.kForward);
-			arm[1].setDirection(Relay.Direction.kReverse);
-			if (!limit_armout[side].get()) {
-				arm[side].set(Relay.Value.kOn);
-			}
-			break;
-		case 0:
-			arm[side].set(Relay.Value.kOff);
-			break;
-		case 1:
-			arm[0].setDirection(Relay.Direction.kReverse);
-			arm[1].setDirection(Relay.Direction.kForward);
-			if (getPinch() && encoder_arm[side].get() < Params.position_arm[side][1]) {
-				arm[side].set(Relay.Value.kOn);
-			} else if (!getPinch() && encoder_arm[side].get() < Params.position_arm[side][0]) {
-				arm[side].set(Relay.Value.kOn);
-			} else {
-				arm[side].set(Relay.Value.kOff);
-				position_pinch[1] = true;
-			}
-			break;
-		}
-	}
-	private boolean getPinch() {
-		if (_input.xbox.getPOV() == 90) {
-			narrow_pinch = false;
-			try {
-				Thread.sleep(150); //Make testing values actually readable
-			} catch (Exception e){
-				System.out.println(e);
-			}
-		} else if (_input.xbox.getPOV() == 270) {
-			narrow_pinch = true;
-			try {
-				Thread.sleep(150); //Make testing values actually readable
-			} catch (Exception e){
-				System.out.println(e);
-			}
+		if (_input.xbox.getPOV() == 270) {
+			narrow_pinch = 0;
+		} else if (_input.xbox.getPOV() == 90) {
+			narrow_pinch = 1;
 		}
 		return narrow_pinch;
 	}
-	private int getTotes() {
-		if (_input.xbox.getPOV() == 0 && tote < 5) {
-				tote++;
-				try {
-					Thread.sleep(150); 
-				} catch (Exception e){
-					System.out.println(e);
-				}
-		} else if (_input.xbox.getPOV() == 180) {
-				tote = 0;
-				try {
-					Thread.sleep(150); 
-				} catch (Exception e){
-					System.out.println(e);
-				}
+	
+	private void elevatorsimple() {
+		if (_input.getAxis(2, 5) <= 0.0) {
+			elevator0.set(_input.getAxis(2,5));
+			elevator1.set(_input.getAxis(2,5));
+		} else {
+			elevator0.set(_input.getAxis(2,5) * Params.speed_creep);
+			elevator1.set(_input.getAxis(2,5) * Params.speed_creep);
 		}
-		return tote;
 	}
 	
 	//STOP EVERYTHING
