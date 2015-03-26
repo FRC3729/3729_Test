@@ -59,6 +59,8 @@ public class Mechanisms extends Thread {
 		SmartDashboard.putBoolean("DB/LED 0", encoder_arm0.get() == Params.position_arm[0][getPinch()] && encoder_arm1.get() == Params.position_arm[1][getPinch()]);
 		SmartDashboard.putBoolean("DB/LED 1", limit_arm0out.get());
 		SmartDashboard.putBoolean("DB/LED 2", limit_arm1out.get());
+		System.out.println(encoder_arm0.get() + " : " + encoder_arm1.get());
+		System.out.println("Pinch: " + getPinch());
 	}
 	
 	//Give out testing values
@@ -88,9 +90,10 @@ public class Mechanisms extends Thread {
 	}
 	//Pinching Mechanism for the arms
 	private void arms() { 
-		if (_input.getAxis(2, 2) >= .75) { //Arms Seperate
+		if (_input.getAxis(2, 2) >= .75) { //Arms Separate
 			if (!limit_arm0out.get()) {
 				arm0.set(Relay.Value.kForward);
+				System.out.println("Test");
 			}
 			if (!limit_arm1out.get()) {
 				arm1.set(Relay.Value.kReverse);

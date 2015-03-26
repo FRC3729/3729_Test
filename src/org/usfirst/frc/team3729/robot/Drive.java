@@ -83,7 +83,13 @@ public class Drive extends Thread {
     public void align() {
     	if (sonar0.getRangeInches() > sonar1.getRangeInches()) {
     		this.tank(Params.speed_creep, 0.0);
+//    		System.out.println("First");
+//    		System.out.println("Sonar 1: " + sonar0.getRangeInches());
+//    		System.out.println("Sonar 2: " + sonar1.getRangeInches());
     	} else if (sonar0.getRangeInches() < sonar1.getRangeInches()) {
+//    		System.out.println("Second");
+//    		System.out.println("Sonar 1: " + sonar0.getRangeInches());
+//    		System.out.println("Sonar 2: " + sonar1.getRangeInches());
     		this.tank(0.0, -Params.speed_creep);
     	} else {
     		this.stopmotors();
