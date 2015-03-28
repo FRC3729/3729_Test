@@ -30,7 +30,9 @@ public class Params {
     public static final double speed_creep = .25;
     public static final double[] speed_elevator = {.45, .55, .65, .75, .85, .95};
     //!Pinch positions
-    public static final int[][] position_arm = {{-11,-205},{20,339}};
+    //!Arm0 is [0][0/1] Arm1[1][0/1]
+    //!
+    public static final int[][] position_arm = {{-14,-281,-195},{23,381,195}};
     
     //!Testing information
     public static final boolean testing_drive = false;
